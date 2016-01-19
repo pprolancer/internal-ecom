@@ -58,7 +58,7 @@ class LoginView(View):
         return render(request, "registration/login.html", ctx)
 
     def get_success_url(self):
-        url = reverse('user-home')
+        url = reverse('home')
         return url
 
 

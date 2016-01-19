@@ -41,10 +41,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
+
                 {% if user.is_authenticated %}
-                <a class="navbar-brand" href="{% url 'home' %}">Home</a>
+                <a class="navbar-brand" href="{% url 'home' %}">MyShop</a>
                 {% else %}
-                <a class="navbar-brand" href="#">Home</a>
+                <a class="navbar-brand" href="#">MyShop</a>
                 {% endif %}
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -87,14 +88,17 @@
     <!-- Page Content -->
     <div class="container">
 
-       {% block breadcrumb %}
+        {% block breadcrumb %}
 
-            {% endblock %}
+        {% endblock %}
 
-            {% block content %}
+        {% block content %}
 
         {% endblock%}
+        
+        {% block extrajs %}
 
+        {% endblock %}
     </div>
 
                

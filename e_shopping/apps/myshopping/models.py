@@ -1,5 +1,6 @@
 from django.db import models
-
+from sorl.thumbnail import ImageField
+from django.core.validators import MinValueValidator
 # Create your models here.
 
 
@@ -26,3 +27,15 @@ class Product(models.Model):
 
     def __str__(self):
         return self.product_name
+
+class ShoppingCart(models.Model):
+    product = models.ForeignKey("Product", related_name='product')
+    product_count = models.IntegerField(blank=True, null=True)
+    product_price_limit = models.PositiveIntegerField(default=0,validators=[MinValueValidator(0)])
+
+    class Meta:
+        verbose_name = "ShoppingCart"
+        verbose_name_plural = "ShoppingCart"
+
+    def __str__(self):
+        return self.product_count

@@ -17,10 +17,22 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from users.views import IndexView
+from django.conf import settings
+from django.contrib.auth import views as auth_views
+from django.views.static import serve
 
 urlpatterns = [
+
     url(r'^admin/', admin.site.urls),
     url(r'^', include('myshopping.urls')),
     url(r'^user/', include('users.urls')),
     url(r'^$', IndexView.as_view(), name="user-home"),
+    
 ]
+
+if settings.DEBUG:
+    urlpatterns += [
+
+        url(r'^media/(.*)$', serve,
+            {'document_root': settings.MEDIA_ROOT}),
+    ]
