@@ -4,7 +4,7 @@ from django.views.generic import View, TemplateView, CreateView
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from carton.cart import Cart
+
 # Create your views here.
 
 class HomeView(View):
