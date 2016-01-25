@@ -5,6 +5,6 @@ from django.contrib import admin
 from .models import *
 
 # admin.site.register(Parents)
-# admin.site.register(Student)
+admin.site.register(UserProfile)
 admin.site.register(Relationship)
 

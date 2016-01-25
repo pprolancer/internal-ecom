@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'myshopping',
     'users',
-
 ]
 
 MIDDLEWARE_CLASSES = [

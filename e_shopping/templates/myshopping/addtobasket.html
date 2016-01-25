@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% load carton_tags %}
+{% get_cart as cart %}
+{% block content %}
+<div class="page_inner">
+                
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="active">Basket</li>
+    </ul>
+	<div class="page-header action">
+	<h1>Basket</h1>
+	</div>
+	<div id="messages"> 
+	</div>
+    <div class="content">
+        <div id="promotions">
+            
+        </div>
+        <div id="content_inner">
+        <div class="basket-title hidden-xs">
+            <div class="row">
+                <h2 class="col-sm-6 h3">Items to buy now</h2>
+                <p class="col-sm-3 h3">Quantity</p>
+                <p class="col-sm-1 h3 align-right">Price</p>
+                <p class="col-sm-2 h3 align-right">Total</p>
+            </div>
+        </div>
+        <form action="." method="post" class="basket_summary" id="basket_formset">
+           
+            <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="1"><input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="1"><input id="id_form-MIN_NUM_FORMS" name="form-MIN_NUM_FORMS" type="hidden" value="0"><input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="1000">
+            {% for product in cart.products %}
+            <div class="basket-items">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <input id="id_form-0-id" name="form-0-id" type="hidden" value="2873">
+                                <a href="#">
+                                    <img class="thumbnail" src="" alt="">
+                                </a>
+                    </div>
+                    <div class="col-sm-4">
+                        <h3><a href="">{{product.product_name}}</a></h3>
+                   </div>
+                    <div class="col-sm-3">
+                        <div class="checkout-quantity">
+                            <div class="input-group  ">
+                                <input class="form-control" id="id-quantity" min="0" name="id-quantity" type="number" value="1">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default total_product" type="button" data-loading-text="Updating...">Update</button>
+                            </span>
+                            </div>
+                        </div>
+                            <div>
+                                <a href="#" data-id="0" data-behaviours="remove" class="inline">Remove</a>
+                                
+                                    | <a href="#" data-id="0" data-behaviours="save" class="inline">Save for later</a>
+                                
+                                <div style="display:none">
+                                    <input id="id_form-0-save_for_later" name="form-0-save_for_later" type="checkbox">
+                                    <input id="id_form-0-DELETE" name="form-0-DELETE" type="checkbox">
+                                </div>
+                                
+                            </div>
+
+                    </div>
+                    <div class="col-sm-1">
+                    <p class="price_color align-right product_price" value="{{product.product_price}}">{{product.product_price}}
+                    </p>
+                    </div>
+                    <div class="col-sm-2">
+                    <p class="price_color align-right product_total">{{product.product_price}}
+                    </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </form>
+    <div class="row">
+	<div class="col-sm-6">
+	    <div id="voucher_form_container" style="display:none">
+	        <form id="voucher_form" action="" method="post">
+	        
+        <div class="form-group ">
+            <label for="id_code" class=" control-label required">
+                Code
+            </label>
+            <div class="">
+                <input class="form-control" id="id_code" maxlength="128" name="code" type="text">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-info" data-loading-text="Adding...">Add voucher</button>
+        or <a href="#" id="voucher_form_cancel">cancel</a>
+    </form>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="sub-header">
+            <h2>Totals</h2>
+    </div>
+<div id="basket_totals">
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th colspan="2"><h3>Basket</h3></th>
+            </tr>
+            <tr>
+                <th class="total">Basket total</th>
+                <th class="total align-right basket_total"></th>
+                </tr>
+                <tr>
+                    <th class="total"><h3>Order total</h3></th>
+                    <td class="total align-right">
+                        <h3 class="price_color">0.0</h3>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+</div>
+</div>
+</div>
+<div class="form-group clearfix">
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-8">
+            <a href="#" class="btn btn-lg btn-primary btn-block">Proceed to checkout</a>
+        </div>
+    </div>
+</div>
+</div>
+                </div>
+            </div>
+{% endblock content %}
+
+
+{% block javascript %}
+<script src="/static/js/jquery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+
+$(".total_product").click(function() {
+var product_price = $(".product_price").text()
+var quantity = $("#id-quantity").val()
+var total = parseInt(product_price)*parseInt(quantity)
+$(".product_total").text(total)
+$(".basket_total").text(total)
+});
+
+});
+</script>
+{% endblock %}

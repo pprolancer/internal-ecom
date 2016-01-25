@@ -28,7 +28,7 @@
                     </div>
                     <div class="text-left">
                     <input type="hidden" id="add_basket" value="{{product.id}}">
-                    <a href="#" class="btn btn-primary add_basket" >Add to basket</a>
+                    <a href="{% url 'add_to_basket' product.id %}" class="btn btn-primary" >Add to basket</a>
                     </div>
                     <div class="ratings">
                         <p class="pull-right">3 reviews</p>

@@ -29,15 +29,18 @@ class Product(models.Model):
     def __str__(self):
         return self.product_name
 
-class ShoppingCart(models.Model):
-    user = models.ForeignKey(User, related_name='shoppingcart_user')
-    product = models.ForeignKey("Product", related_name='product')
-    product_count = models.IntegerField(blank=True, null=True)
-    product_price_limit = models.PositiveIntegerField(default=0,validators=[MinValueValidator(0)])
+# class ShoppingCart(models.Model):
+#     user = models.ForeignKey(User, related_name='shoppingcart_user')
+#     # product = models.ForeignKey("Product", related_name='product')
+#     product_count = models.IntegerField(blank=True, null=True)
+#     user_productcount = models.IntegerField(default=0,blank=True)
+#     product_price_limit = models.PositiveIntegerField(default=0,validators=[MinValueValidator(0)])
+#     user_product_price_limit = models.PositiveIntegerField(default=0,validators=[MinValueValidator(0)])
 
-    class Meta:
-        verbose_name = "ShoppingCart"
-        verbose_name_plural = "ShoppingCart"
+#     class Meta:
+#         verbose_name = "ShoppingCart"
+#         verbose_name_plural = "ShoppingCart"
 
-    # def __str__(self):
-    #     return self.product_count
+#     # def __str__(self):
+#     #     return self.product_count
+
