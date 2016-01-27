@@ -1,7 +1,6 @@
 {% extends "base.html" %}
-{% load carton_tags %}
-{% get_cart as cart %}
 {% block content %}
+{% csrf_token %}
 <div class="page_inner">
                 
     <ul class="breadcrumb">
@@ -31,9 +30,9 @@
         <form action="." method="post" class="basket_summary" id="basket_formset">
            
             <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="1"><input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="1"><input id="id_form-MIN_NUM_FORMS" name="form-MIN_NUM_FORMS" type="hidden" value="0"><input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="1000">
-            {% for product in cart.products %}
-            <div class="basket-items">
-                <div class="row">
+            {% for prt in products %}
+            <div class="basket-items" id="product_{{prt.id}}">
+                <div class="row" >
                     <div class="col-sm-2">
                         <input id="id_form-0-id" name="form-0-id" type="hidden" value="2873">
                                 <a href="#">
@@ -41,7 +40,7 @@
                                 </a>
                     </div>
                     <div class="col-sm-4">
-                        <h3><a href="">{{product.product_name}}</a></h3>
+                        <h3><a href="">{{prt.product.product_name}}</a></h3>
                    </div>
                     <div class="col-sm-3">
                         <div class="checkout-quantity">
@@ -53,9 +52,9 @@
                             </div>
                         </div>
                             <div>
-                                <a href="#" data-id="0" data-behaviours="remove" class="inline">Remove</a>
+                                <a href="#" data-id="0" data-behaviours="remove" class="inline remove_from_cart" data-value="{{prt.id}}">Remove</a>
                                 
-                                    | <a href="#" data-id="0" data-behaviours="save" class="inline">Save for later</a>
+                                    | <a href="#" data-id="0" data-behaviours="save" class="inline save_for_later">Save for later</a>
                                 
                                 <div style="display:none">
                                     <input id="id_form-0-save_for_later" name="form-0-save_for_later" type="checkbox">
@@ -66,11 +65,11 @@
 
                     </div>
                     <div class="col-sm-1">
-                    <p class="price_color align-right product_price" value="{{product.product_price}}">{{product.product_price}}
+                    <p class="price_color align-right product_price" value="{{product.product_price}}">{{prt.product.product_price}}
                     </p>
                     </div>
                     <div class="col-sm-2">
-                    <p class="price_color align-right product_total">{{product.product_price}}
+                    <p class="price_color align-right product_total">{{prt.product.product_price}}
                     </p>
                     </div>
                 </div>
@@ -128,8 +127,8 @@
     </div>
 </div>
 </div>
-                </div>
-            </div>
+</div>
+</div>
 {% endblock content %}
 
 
@@ -146,6 +145,41 @@ var quantity = $("#id-quantity").val()
 var total = parseInt(product_price)*parseInt(quantity)
 $(".product_total").text(total)
 $(".basket_total").text(total)
+});
+
+
+$( ".remove_from_cart" ).click(function() {
+    var remove_cart_id = $(this).attr("data-value")
+      $.ajax({
+      type: "POST",
+      url: "{% url 'remove_frpm_cart' %}",
+      data: {'data':remove_cart_id, 'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
+      dataType : "json",
+      success: function(data){
+      	if(data.status){
+      		$('#product_'+ parseInt(data.get_id) ).remove()
+      	}
+
+      }
+    });
+});
+
+
+$( ".save_for_later" ).click(function() {
+    var remove_cart_id = $(this).attr("data-value")
+    var quantity = $("#id-quantity").val()
+      $.ajax({
+      type: "POST",
+      url: "{% url 'save_for_later' %}",
+      data: {'remove_cart_id':remove_cart_id,'quantity':quantity, 'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
+      dataType : "json",
+      success: function(data){
+        if(data.status){
+            $('#product_'+ parseInt(data.get_id) ).remove()
+        }
+
+      }
+    });
 });
 
 });

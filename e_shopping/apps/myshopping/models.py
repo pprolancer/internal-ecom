@@ -2,6 +2,7 @@ from django.db import models
 from sorl.thumbnail import ImageField
 from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User
+from datetime import datetime
 # Create your models here.
 
 
@@ -29,18 +30,22 @@ class Product(models.Model):
     def __str__(self):
         return self.product_name
 
-# class ShoppingCart(models.Model):
-#     user = models.ForeignKey(User, related_name='shoppingcart_user')
-#     # product = models.ForeignKey("Product", related_name='product')
-#     product_count = models.IntegerField(blank=True, null=True)
-#     user_productcount = models.IntegerField(default=0,blank=True)
-#     product_price_limit = models.PositiveIntegerField(default=0,validators=[MinValueValidator(0)])
-#     user_product_price_limit = models.PositiveIntegerField(default=0,validators=[MinValueValidator(0)])
 
-#     class Meta:
-#         verbose_name = "ShoppingCart"
-#         verbose_name_plural = "ShoppingCart"
+class Cart(models.Model):
+    user = models.ForeignKey(User)
+    product = models.ForeignKey("Product", related_name ='productcart')
+    creation_date = models.DateTimeField(auto_now_add=True, blank=True)
+    quantity = models.CharField("Quantity", max_length=100)
+    price = models.CharField("Product cart Price", max_length=100)
 
-#     # def __str__(self):
-#     #     return self.product_count
+    class Meta:
+        verbose_name = 'cart'
+        verbose_name_plural = 'carts'
 
+    def add(self,user,product,price,quantity):
+        cart, created = Cart.objects.get_or_create(user=user,
+            product=product,price=price, quantity= quantity)
+        cart.save()
+        return True
+
+    # def remove 
