@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+{% load basket_total %}
 {% csrf_token %}
 <div class="page_inner">
                 
@@ -45,17 +46,16 @@
                     <div class="col-sm-3">
                         <div class="checkout-quantity">
                             <div class="input-group  ">
-                                <input class="form-control" id="id-quantity" min="0" name="id-quantity" type="number" value="1">
+                                <input class="form-control" 
+                                id="id-quantity_{{prt.product.id}}" name="id-quantity" type="number" value="{{prt.quantity}}">
                             <span class="input-group-btn">
-                                <button class="btn btn-default total_product" type="button" data-loading-text="Updating...">Update</button>
+                                <button class="btn btn-default update_product" type="button" data-loading-text="Updating..." data-value="{{prt.product.id}}" >Update</button>
                             </span>
                             </div>
                         </div>
                             <div>
-                                <a href="#" data-id="0" data-behaviours="remove" class="inline remove_from_cart" data-value="{{prt.id}}">Remove</a>
-                                
-                                    | <a href="#" data-id="0" data-behaviours="save" class="inline save_for_later">Save for later</a>
-                                
+                                <a href="#" data-id="0" data-behaviours="remove" class="inline remove_from_cart" data-value="{{prt.product.id}}">Remove <input type="hidden" id="cart_id" value="{{prt.id}}"></a>
+                               
                                 <div style="display:none">
                                     <input id="id_form-0-save_for_later" name="form-0-save_for_later" type="checkbox">
                                     <input id="id_form-0-DELETE" name="form-0-DELETE" type="checkbox">
@@ -69,7 +69,7 @@
                     </p>
                     </div>
                     <div class="col-sm-2">
-                    <p class="price_color align-right product_total">{{prt.product.product_price}}
+                    <p class="price_color align-right product_total">{{prt.price}}
                     </p>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
 	    <div id="voucher_form_container" style="display:none">
 	        <form id="voucher_form" action="" method="post">
 	        
-        <div class="form-group ">
+        <div class="form-group">
             <label for="id_code" class=" control-label required">
                 Code
             </label>
@@ -106,13 +106,8 @@
             </tr>
             <tr>
                 <th class="total">Basket total</th>
-                <th class="total align-right basket_total"></th>
-                </tr>
-                <tr>
-                    <th class="total"><h3>Order total</h3></th>
-                    <td class="total align-right">
-                        <h3 class="price_color">0.0</h3>
-                    </td>
+                {% basket_total  as total %}
+                <th class="total align-right basket_total">{{total}}</th>
                 </tr>
         </tbody>
     </table>
@@ -138,46 +133,39 @@
 <script type="text/javascript">
 $(document).ready(function() {
 
-
-$(".total_product").click(function() {
-var product_price = $(".product_price").text()
-var quantity = $("#id-quantity").val()
-var total = parseInt(product_price)*parseInt(quantity)
-$(".product_total").text(total)
-$(".basket_total").text(total)
-});
-
-
 $( ".remove_from_cart" ).click(function() {
-    var remove_cart_id = $(this).attr("data-value")
-      $.ajax({
+    var product_id = $(this).attr("data-value")
+    var cart_id = $(this).children(':first').val()
+    $.ajax({
       type: "POST",
       url: "{% url 'remove_frpm_cart' %}",
-      data: {'data':remove_cart_id, 'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
+      data: {'product_id':product_id,'cart_id':cart_id, 'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
       dataType : "json",
       success: function(data){
       	if(data.status){
-      		$('#product_'+ parseInt(data.get_id) ).remove()
+      		$('#product_'+ parseInt(data.cart_id) ).remove()
       	}
 
       }
     });
 });
 
+$( ".update_product" ).click(function() {
+    var save_later= $(this).data("value")
+    var quantity = $("#id-quantity_"+save_later).val()
+    console.log(quantity)
 
-$( ".save_for_later" ).click(function() {
-    var remove_cart_id = $(this).attr("data-value")
-    var quantity = $("#id-quantity").val()
-      $.ajax({
+    var product_price = $(".product_price").text()
+    console.log(product_price)
+    var total_price = parseInt(product_price)*parseInt(quantity)
+    console.log(total_price)
+    $.ajax({
       type: "POST",
-      url: "{% url 'save_for_later' %}",
-      data: {'remove_cart_id':remove_cart_id,'quantity':quantity, 'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
+      url: "{% url 'update_product' %}",
+      data: {'save_later':save_later,'quantity':quantity, 'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
       dataType : "json",
       success: function(data){
-        if(data.status){
-            $('#product_'+ parseInt(data.get_id) ).remove()
-        }
-
+        location.reload();
       }
     });
 });

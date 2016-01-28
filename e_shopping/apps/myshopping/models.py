@@ -35,7 +35,7 @@ class Cart(models.Model):
     user = models.ForeignKey(User)
     product = models.ForeignKey("Product", related_name ='productcart')
     creation_date = models.DateTimeField(auto_now_add=True, blank=True)
-    quantity = models.CharField("Quantity", max_length=100)
+    quantity = models.IntegerField("Quantity", default=0)
     price = models.CharField("Product cart Price", max_length=100)
 
     class Meta:
@@ -43,9 +43,10 @@ class Cart(models.Model):
         verbose_name_plural = 'carts'
 
     def add(self,user,product,price,quantity):
-        cart, created = Cart.objects.get_or_create(user=user,
-            product=product,price=price, quantity= quantity)
-        cart.save()
+        try:
+            cart, created = Cart.objects.get_or_create(user=user,
+                product=product,price=price, quantity= quantity)
+            cart.save()
+        except:
+            pass
         return True
-
-    # def remove 

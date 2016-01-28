@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-{% csrf_token %}
+
         <div class="row">
 
             <div class="col-md-3">
@@ -13,7 +13,6 @@
             </div>
 
             <div class="col-md-9">
-            {% for product in products %}
                 <div class="thumbnail">
                     <img class="img-responsive" src="http://placehold.it/800x300" alt="">
                     <div class="caption-full">
@@ -27,8 +26,12 @@
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
                     </div>
                     <div class="text-left">
-                    <input type="hidden" id="add_basket" value="{{product.id}}">
-                    <a href="{% url 'add_to_basket' product.id %}" class="btn btn-primary" >Add to Cart</a>
+                    <form method="POST" action=".">
+                    {% csrf_token %}
+                        <input type="hidden" id="add_basket" name="add_basket" value="{{product.id}}">
+                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                    </form>
+
                     </div>
                     <div class="ratings">
                         <p class="pull-right">3 reviews</p>
@@ -42,7 +45,6 @@
                         </p>
                     </div>
                 </div>
-                {% endfor %}
 
                 <div class="well">
 
@@ -100,27 +102,3 @@
             </div>
         </div>
 {% endblock content %}
-
-
-{% block javascript %}
-<script src="/static/js/jquery.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function() {
-$( ".add_basket" ).click(function() {
-    var add_basket = $(this).parent().find('#add_basket').val()
-    console.log(add_basket)
-      $.ajax({
-      type: "POST",
-      url: "{% url 'shopping_cart' %}",
-      data: {'data':add_basket, 'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
-      dataType : "json",
-      success: function(data){
-
-      }
-    });
-});
-
-});
-</script>
-{% endblock %}
