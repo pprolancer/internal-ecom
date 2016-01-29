@@ -65,6 +65,9 @@
                     <li>
                         <a href="{% url 'logout' %}">Logout</a>
                     </li>
+                    <li>
+                        <a href="#" style="padding-left: 611px;font-size: 15px;color:white">Welcome,{{request.user}}</a>
+                    </li>
                 </ul>
             </div>
             {% else %}
@@ -77,6 +80,8 @@
                 </ul>
             </div>
             {%endif%}
+
+
 
 
 

@@ -2,19 +2,38 @@
 {% block content %}
 {% load basket_total %}
 {% csrf_token %}
+
+<div class="messages">
+    {% if messages %}
+    {% for message in messages %}
+    <div class='alert alert-{% if message.tags %}{{ message.tags }}{% endif %}'>
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+
 <div class="page_inner">
-                
+
     <ul class="breadcrumb">
         <li>
             <a href="{% url 'home' %}">Home</a>
         </li>
         <li class="active">Basket</li>
     </ul>
-	<div class="page-header action">
-	<h1>Basket</h1>
-	</div>
-	<div id="messages"> 
-	</div>
+    <div class="page-header action">
+    <h1>Basket</h1>
+    </div>
+
+<div id="messages_exceed" style="display: none">
+   <div class="alert alert-danger  fade in">
+            <a class="messages_exceed_close" data-dismiss="alert" href="#">×</a>
+            <div class="alertinner wicon">You have reach upto limit
+                        <i class="icon-exclamation-sign"></i>
+            </div>
+        </div>
+</div>
     <div class="content">
         <div id="promotions">
             
@@ -69,7 +88,8 @@
                     </p>
                     </div>
                     <div class="col-sm-2">
-                    <p class="price_color align-right product_total">{{prt.price}}
+                    {% quantity_price_total  prt as to_pr %}
+                    <p class="price_color align-right product_total">{{to_pr}}
                     </p>
                     </div>
                 </div>
@@ -77,10 +97,10 @@
             {% endfor %}
         </form>
     <div class="row">
-	<div class="col-sm-6">
-	    <div id="voucher_form_container" style="display:none">
-	        <form id="voucher_form" action="" method="post">
-	        
+    <div class="col-sm-6">
+        <div id="voucher_form_container" style="display:none">
+            <form id="voucher_form" action="" method="post">
+            
         <div class="form-group">
             <label for="id_code" class=" control-label required">
                 Code
@@ -106,7 +126,7 @@
             </tr>
             <tr>
                 <th class="total">Basket total</th>
-                {% basket_total  as total %}
+                {% basket_total  products as total %}
                 <th class="total align-right basket_total">{{total}}</th>
                 </tr>
         </tbody>
@@ -114,13 +134,17 @@
 </div>
 </div>
 </div>
+
+{% if not status  %}
 <div class="form-group clearfix">
     <div class="row">
         <div class="col-sm-4 col-sm-offset-8">
-            <a href="#" class="btn btn-lg btn-primary btn-block">Proceed to checkout</a>
+            <a href="#" class="btn btn-lg btn-primary btn-block processd_to_checkout">Proceed to checkout</a>
         </div>
     </div>
 </div>
+{% endif %}
+
 </div>
 </div>
 </div>
@@ -142,9 +166,9 @@ $( ".remove_from_cart" ).click(function() {
       data: {'product_id':product_id,'cart_id':cart_id, 'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
       dataType : "json",
       success: function(data){
-      	if(data.status){
-      		$('#product_'+ parseInt(data.cart_id) ).remove()
-      	}
+        if(data.status){
+            $('#product_'+ parseInt(data.cart_id) ).remove()
+        }
 
       }
     });
@@ -153,12 +177,8 @@ $( ".remove_from_cart" ).click(function() {
 $( ".update_product" ).click(function() {
     var save_later= $(this).data("value")
     var quantity = $("#id-quantity_"+save_later).val()
-    console.log(quantity)
-
     var product_price = $(".product_price").text()
-    console.log(product_price)
     var total_price = parseInt(product_price)*parseInt(quantity)
-    console.log(total_price)
     $.ajax({
       type: "POST",
       url: "{% url 'update_product' %}",
@@ -168,6 +188,41 @@ $( ".update_product" ).click(function() {
         location.reload();
       }
     });
+});
+
+
+
+$(".processd_to_checkout").click(function() {
+    $.ajax({
+      type: "POST",
+      url: "{% url 'processd_to_checkout' %}",
+      data: {'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
+      dataType : "json",
+      success: function(data){
+        console.log(data)
+       if(data.status='user_unauthorise'){
+        $('#messages_unauthorise').show()
+
+       }
+        if(data.status='exceedlimit'){
+            $('#messages_exceed').show()
+        }
+       if(data.status='true'){
+
+        var url = "{% url 'myshopping-checkout' %}"
+        window.location = url;
+       }
+      }
+    });
+});
+
+$('.messages_unauthorise_close').click(function(){
+    $('#messages_exceed').hide()
+});
+
+
+$('.messages_exceed_close').click(function(){
+    $('#messages_exceed').hide()
 });
 
 });

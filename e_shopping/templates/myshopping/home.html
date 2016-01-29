@@ -1,12 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-
-
     <div class="col-md-3">
         <p class="lead">Shop Name</p>
         <div class="list-group">
         {% for category in categories %}
-            <a href="#" class="list-group-item category-list">{{category.title}}</a>
+            <a href="#" class="list-group-item category-list" id="{{category.id}}">{{category.title}}</a>
         {% endfor %}
         </div>
     </div>
@@ -44,14 +42,14 @@
 
         <div class="row">
             {% for product in products  %}
-            <div class="col-sm-4 col-lg-4 col-md-4 product" id="product_{{product.id}}">
+            <div class="col-sm-4 col-lg-4 col-md-4 product {{product.category.id}}" id="{{product.category.id}}">
                 <div class="thumbnail">
                     <img src="http://placehold.it/320x150" alt="">
                     <div class="caption">
                         <h4 class="pull-right">${{product.product_price}}</h4>
                         <h4><a href="{% url 'product_detail' product.id %}">{{product.product_name}}</a>
                         </h4>
-                        <p>See more snippets like this online store item at <a target="_blank" href="http://www.bootsnipp.com">Bootsnipp - http://bootsnipp.com</a>.</p>
+                        <p>{{product.product_description}}</p>
                     </div>
                     <div class="ratings">
                         <p class="pull-right">15 reviews</p>
@@ -68,12 +66,12 @@
             {% endfor %}
 
 
-            <div class="col-sm-4 col-lg-4 col-md-4">
+<!--             <div class="col-sm-4 col-lg-4 col-md-4">
                 <h4><a href="#">Like this template?</a>
                 </h4>
                 <p>If you like this template, then check out <a target="_blank" href="http://maxoffsky.com/code-blog/laravel-shop-tutorial-1-building-a-review-system/">this tutorial</a> on how to build a working review system for your online store!</p>
                 <a class="btn btn-primary" target="_blank" href="http://maxoffsky.com/code-blog/laravel-shop-tutorial-1-building-a-review-system/">View Tutorial</a>
-            </div>
+            </div> -->
 
         </div>
 
@@ -82,11 +80,15 @@
 
 {% endblock content %}
 
-{% block extrajs %}
+{% block javascript %}
+<script src="/static/js/jquery.js"></script>
 <script type="text/javascript">
 $( document ).ready(function() {
-$('category-list').click(function() {
-  alert( "Handler for .click() called." );
+$('.category-list').click(function() {
+    var category_id = $(this).attr('id')
+    var get_current = $('.product.'+ category_id);
+        $('.product').not( get_current).hide(500);
+        get_current.show(500);
 });
 
 });
