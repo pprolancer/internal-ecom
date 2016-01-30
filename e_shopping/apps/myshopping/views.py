@@ -24,8 +24,10 @@ class HomeView(View):
 
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
+        # import pdb;pdb.set_trace()
         categories = Category.objects.all()
-        products = Product.objects.all()
+        # products = Product.objects.all()
+        products = ProductImage.objects.all()
         ctx = {'categories':categories,'products':products}
         return render(request, "myshopping/home.html", ctx)
 

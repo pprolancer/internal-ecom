@@ -3,9 +3,15 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 
 # Create your models here.
+USER_TYPES = (
+    ('parent', 'PARENT'),
+    ('student', 'STUDENT'),
+)
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User,related_name='profile')
-    user_role = models.CharField("User Role",max_length=100, db_index=True)
+    user_role = models.CharField(
+        "User Role", max_length=50, choices=USER_TYPES)
     product_count = models.IntegerField(default=0)
     product_price_limit = models.PositiveIntegerField(default=0,validators=[MinValueValidator(0)])
 

@@ -3,8 +3,16 @@ from sorl.thumbnail import ImageField
 from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User
 from datetime import datetime
+from sorl.thumbnail import ImageField
+from auditlog.registry import auditlog
+import uuid
+import os
 # Create your models here.
 
+def file_name(instance, filename):
+    name, ext = os.path.splitext(filename)
+    name_uuid = uuid.uuid1().__str__()
+    return ''.join([name_uuid, ext])
 
 class Category(models.Model):
     title = models.CharField("Title",max_length=100, db_index=True)
@@ -50,3 +58,12 @@ class Cart(models.Model):
         except:
             pass
         return True
+
+class ProductImage(models.Model):
+    product = models.ForeignKey("Product", related_name ='productimage')
+    image = models.ImageField(
+        "Photo", upload_to=file_name, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "ProductImage"
+        verbose_name_plural = "ProductImages"
