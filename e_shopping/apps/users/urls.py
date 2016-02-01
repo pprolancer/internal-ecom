@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^register/$', RegisterView.as_view(), name="user-register"),
     url(r'^login/$', LoginView.as_view(), name="user-login"),
     url(r'^logout/$', LogoutView.as_view(), name="logout"),
+    
 ]
 
 if settings.DEBUG:

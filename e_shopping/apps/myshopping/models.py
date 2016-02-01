@@ -44,7 +44,8 @@ class Cart(models.Model):
     product = models.ForeignKey("Product", related_name ='productcart')
     creation_date = models.DateTimeField(auto_now_add=True, blank=True)
     quantity = models.IntegerField("Quantity", default=0)
-    price = models.CharField("Product cart Price", max_length=100)
+    # price = models.CharField("Product cart Price", max_length=100)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
 
     class Meta:
         verbose_name = 'cart'
@@ -67,3 +68,14 @@ class ProductImage(models.Model):
     class Meta:
         verbose_name = "ProductImage"
         verbose_name_plural = "ProductImages"
+
+
+class Order(models.Model):
+    user = models.ForeignKey(User)
+    product = models.ForeignKey("Product", related_name ='order_product')
+    product_purchas_date = models.DateTimeField(auto_now_add=True, blank=True)
+    item_quantity = models.IntegerField("Item Order Quantity", default=0)
+
+    class Meta:
+        verbose_name = "Orders"
+        verbose_name_plural = "Orders"

@@ -14,6 +14,8 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse, HttpResponseRedirect
 
 # Create your views here.
 
@@ -24,7 +26,6 @@ class HomeView(View):
 
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
-        # import pdb;pdb.set_trace()
         categories = Category.objects.all()
         # products = Product.objects.all()
         products = ProductImage.objects.all()
@@ -91,12 +92,12 @@ class ProcessdCheckout(View):
         user_quantity = Cart.objects.filter(user_id=request.user).aggregate(total=Sum('quantity'))
         user_price = Cart.objects.filter(user_id=request.user).aggregate(total=Sum('price'))
         profile_user = UserProfile.objects.get(user_id=request.user)
-        if (user_quantity['total'] <= profile_user.product_count) or (user_price['total']<= profile_user.product_price_limit):
+        if (user_quantity['total'] <= profile_user.product_count) and (user_price['total']<= profile_user.product_price_limit):
             return HttpResponse(
                     json.dumps({'status': 'true'}), content_type="application/json")
         else:
             return HttpResponse(
-        json.dumps({'status': 'exceedlimit'}), content_type="application/json")
+        json.dumps({'status': 'uptoresult'}), content_type="application/json")
 
 
 class CheckoutList(View):
@@ -120,3 +121,20 @@ class AddToCartView(View):
             messages.warning(request,
                 'Admin does not grant permission for shopping')
             return render(request, "myshopping/addtobasket.html", {'status':'False'})
+
+
+class SendMailToAdmin(View):
+    def send_email(request):
+        subject = "Cinnemohills Online shopping"
+        message = "hiii"
+        from_email = "from_user@abc.com"
+        if subject and message and from_email:
+            try:
+                send_mail(subject, message, from_email, ['to_user'])
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+            return HttpResponseRedirect('/contact/thanks/')
+        else:
+            # In reality we'd use a form class
+            # to get proper validation errors.
+            return HttpResponse('Make sure all fields are entered and valid.')

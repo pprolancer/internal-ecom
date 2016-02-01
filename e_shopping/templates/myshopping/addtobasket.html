@@ -26,6 +26,32 @@
     <h1>Basket</h1>
     </div>
 
+ <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"><b>Pick Payment Option</b></h4>
+        </div>
+        <div class="modal-body">
+           <div class="checkbox">
+                <label><input type="checkbox" name="moneyorder" id="moneyorder">Money order or Check </label>
+            </div>
+            <div class="checkbox">
+              <label><input type="checkbox" name="creditcard" id="creditcard">Creditcard</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default paymentsubmit" data-dismiss="modal">Submit</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
 <div id="messages_exceed" style="display: none">
    <div class="alert alert-danger  fade in">
             <a class="messages_exceed_close" data-dismiss="alert" href="#">×</a>
@@ -139,14 +165,14 @@
 <div class="form-group clearfix">
     <div class="row">
         <div class="col-sm-4 col-sm-offset-8">
-            <a href="#" class="btn btn-lg btn-primary btn-block processd_to_checkout">Proceed to checkout</a>
+        <button type="button" class="btn btn-info btn-lg processd_to_checkout" data-toggle="modal" >Proceed to checkout</button>
         </div>
     </div>
 </div>
 {% endif %}
+</div>
+</div>
 
-</div>
-</div>
 </div>
 {% endblock content %}
 
@@ -196,31 +222,33 @@ $(".processd_to_checkout").click(function() {
       data: {'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
       dataType : "json",
       success: function(data){
-        console.log(data)
-       if(data.status='user_unauthorise'){
-        $('#messages_unauthorise').show()
-
-       }
-        if(data.status='exceedlimit'){
+        console.log(data.status)
+        if(data.status=='uptoresult'){
             $('#messages_exceed').show()
         }
-       if(data.status='true'){
-
-        var url = "{% url 'myshopping-checkout' %}"
-        window.location = url;
+        if(data.status=='true'){
+            
+            $('#myModal').modal('show') 
        }
+
       }
     });
 });
 
-$('.messages_unauthorise_close').click(function(){
-    $('#messages_exceed').hide()
-});
-
-
 $('.messages_exceed_close').click(function(){
     $('#messages_exceed').hide()
 });
+
+$('.paymentsubmit').click(function(){
+
+    // debugger
+    var abc = $('.moneyorder').prop('checked', true)
+    // alert(abc)
+
+});
+
+
+
 
 });
 </script>
