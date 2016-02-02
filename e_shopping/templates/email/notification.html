@@ -1,0 +1,10 @@
+Hello Admin
+{% for order in orders %}
+This is to inform you that {{order.user}} has ordered the following product(s)-
+
+Package contain-
+
+)Product Name - {{order.product.product_name}}
+2)Product Price - ${{order.product.product_price}}
+
+{% endfor %}

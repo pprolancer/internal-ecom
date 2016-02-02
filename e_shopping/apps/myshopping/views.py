@@ -14,9 +14,9 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.core.mail import send_mail, BadHeaderError
+from django.core.mail import send_mail
 from django.http import HttpResponse, HttpResponseRedirect
-
+from django.template.loader import render_to_string
 # Create your views here.
 
 
@@ -27,7 +27,6 @@ class HomeView(View):
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         categories = Category.objects.all()
-        # products = Product.objects.all()
         products = ProductImage.objects.all()
         ctx = {'categories':categories,'products':products}
         return render(request, "myshopping/home.html", ctx)
@@ -88,11 +87,18 @@ class UpdateCartView(View):
 class ProcessdCheckout(View):
 
     def post(self, request, *args, **kwargs):
-        user = request.user
         user_quantity = Cart.objects.filter(user_id=request.user).aggregate(total=Sum('quantity'))
         user_price = Cart.objects.filter(user_id=request.user).aggregate(total=Sum('price'))
         profile_user = UserProfile.objects.get(user_id=request.user)
         if (user_quantity['total'] <= profile_user.product_count) and (user_price['total']<= profile_user.product_price_limit):
+            cart_remove = Cart.objects.filter(user_id=request.user)
+            for i in cart_remove:
+                order , created = Order.objects.get_or_create(user=request.user,
+                    product_id=i.product_id,item_quantity=i.quantity,item_price=i.price,order_status='Pending')
+                order.save()
+                cart_delete = Cart.objects.filter(user=request.user,product_id=i.product_id)
+                cart_delete.delete()
+
             return HttpResponse(
                     json.dumps({'status': 'true'}), content_type="application/json")
         else:
@@ -125,16 +131,21 @@ class AddToCartView(View):
 
 class SendMailToAdmin(View):
     def post(self, request, *args, **kwargs):
+        orders = Order.objects.filter(user=request.user)
         subject = "Cinnemohills Online shopping"
-        message = "hiii"
-        from_email = "from_user@abc.com"
+        data_dict = {'orders':orders}
+        message = render_to_string(
+                    "email/notification.html", data_dict)
+
+        from_email = ""
         if subject and message and from_email:
             try:
-                pass
-                # send_mail(subject, message, from_email, ['to_user'])
+                send_mail(subject, message, from_email, [''])
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
-            return HttpResponseRedirect('/contact/thanks/')
+            return HttpResponse(
+                json.dumps({'status': 'send_mail'}), content_type="application/json")
+            # return HttpResponseRedirect('/contact/thanks/')
         else:
             # In reality we'd use a form class
             # to get proper validation errors.

@@ -7,7 +7,15 @@ from sorl.thumbnail import ImageField
 from auditlog.registry import auditlog
 import uuid
 import os
+from decimal import Decimal
 # Create your models here.
+
+ORDER_STATUS = (
+('Pending','PENDING'),
+('Processed','PROCESSED'),
+('Returned','RETURNED'),
+('Canceled','CANCELED'),
+)
 
 def file_name(instance, filename):
     name, ext = os.path.splitext(filename)
@@ -75,7 +83,9 @@ class Order(models.Model):
     product = models.ForeignKey("Product", related_name ='order_product')
     product_purchas_date = models.DateTimeField(auto_now_add=True, blank=True)
     item_quantity = models.IntegerField("Item Order Quantity", default=0)
-
+    item_price = models.DecimalField(max_digits=8, decimal_places=2)#default=Decimal(0.0)
+    order_status = models.CharField(
+        "User Order Status", max_length=50, choices=ORDER_STATUS)
     class Meta:
         verbose_name = "Orders"
         verbose_name_plural = "Orders"

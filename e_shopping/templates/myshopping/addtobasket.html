@@ -60,6 +60,11 @@
             </div>
         </div>
 </div>
+
+<div class="alert alert-success fade in send_mail_successfully" style="display: none">
+    <a href="#" class="send_mail_successfully_close" data-dismiss="alert">&times;</a>
+    <strong>Success!</strong> Your Product is ready for Dispatch.
+</div>
     <div class="content">
         <div id="promotions">
             
@@ -165,7 +170,7 @@
 <div class="form-group clearfix">
     <div class="row">
         <div class="col-sm-4 col-sm-offset-8">
-        <button type="button" class="btn btn-info btn-lg processd_to_checkout" data-toggle="modal" >Proceed to checkout</button>
+        <button type="button" class="btn btn-info btn-lg processd_to_checkout" data-toggle="modal"  >Proceed to checkout</button>
         </div>
     </div>
 </div>
@@ -248,13 +253,17 @@ $('.paymentsubmit').click(function(){
               dataType : "json",
               success: function(data){
 
-
+                if(data.status=='send_mail'){
+                    $('.send_mail_successfully').show()
+                }
               }
         });
     }
 });
 
-
+$(".send_mail_successfully_close").click(function(){
+     location.reload();
+});
 
 
 });

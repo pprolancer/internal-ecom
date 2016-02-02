@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 import sys
 from unipath import Path
+from settings_secret import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_DIR = Path(__file__).ancestor(3)
@@ -33,6 +34,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTO_LOGOUT_DELAY = 10
 
 # Application definition
 
@@ -132,10 +134,3 @@ STATICFILES_DIRS = [
     
 ]
 
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST='smtp.gmail.com'
-EMAIL_PORT=587
-EMAIL_HOST_USER='cis.dev393'
-EMAIL_HOST_PASSWORD='cisdev274'
-EMAIL_USE_TLS = True
