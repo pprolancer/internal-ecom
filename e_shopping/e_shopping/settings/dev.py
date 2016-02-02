@@ -7,10 +7,10 @@ ALLOWED_HOSTS = ['*']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'internal-ecom',
-        'HOST': '',
+        'NAME': 'internalecom',
+        'HOST': 'localhost',
         'PORT': '5432',
-        'USER': '',
-        'PASSWORD': ''
+        'USER': 'chills',
+        'PASSWORD': 'raWoDwigaKaUYW'
     }
 }

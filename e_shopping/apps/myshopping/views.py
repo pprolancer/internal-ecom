@@ -124,13 +124,14 @@ class AddToCartView(View):
 
 
 class SendMailToAdmin(View):
-    def send_email(request):
+    def post(self, request, *args, **kwargs):
         subject = "Cinnemohills Online shopping"
         message = "hiii"
         from_email = "from_user@abc.com"
         if subject and message and from_email:
             try:
-                send_mail(subject, message, from_email, ['to_user'])
+                pass
+                # send_mail(subject, message, from_email, ['to_user'])
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
             return HttpResponseRedirect('/contact/thanks/')

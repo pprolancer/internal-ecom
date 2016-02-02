@@ -11,5 +11,5 @@ urlpatterns = [
     url(r'^processd_to_checkout/$', ProcessdCheckout.as_view(), name="processd_to_checkout"),
     url(r'^myshopping-checkout/$', CheckoutList.as_view(), name="myshopping-checkout"),
     url(r'^addtobasket/$', AddToCartView.as_view(), name="add_to_basket"),
-    # url(r'^sendemail/$', SendMailToAdmin.as_view, name="sendmail_to_admin"),
+    url(r'^sendemail/$', SendMailToAdmin.as_view(), name="sendmail_to_admin"),
 ]

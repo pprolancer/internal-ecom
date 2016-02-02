@@ -240,11 +240,18 @@ $('.messages_exceed_close').click(function(){
 });
 
 $('.paymentsubmit').click(function(){
+    if ($('#moneyorder').is(':checked')){
+        $.ajax({
+              type: "POST",
+              url: "{% url 'sendmail_to_admin' %}",
+              data: {'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
+              dataType : "json",
+              success: function(data){
 
-    // debugger
-    var abc = $('.moneyorder').prop('checked', true)
-    // alert(abc)
 
+              }
+        });
+    }
 });
 
 
