@@ -125,6 +125,8 @@ MEDIA_ROOT = PROJECT_DIR.child("media")
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = PROJECT_DIR.child("collected_static")
+
 STATICFILES_DIRS = [
     Path(PROJECT_DIR.child("static"))
     

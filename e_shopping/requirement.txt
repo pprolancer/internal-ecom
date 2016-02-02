@@ -1,3 +1,7 @@
 Django==1.9
+Pillow==3.1.0
 Unipath==1.1
-sorl-thumbnail == 12.3
+django-auditlog==0.3.2
+django-jsonfield==0.9.15
+psycopg2==2.6.1
+sorl-thumbnail==12.3
