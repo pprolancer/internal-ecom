@@ -83,6 +83,11 @@ class ProductImage(models.Model):
         verbose_name = "ProductImage"
         verbose_name_plural = "ProductImages"
 
+    def image_tag(self):
+        return u'<img src="%s" height="100px" width="100px"/>' % self.image.url
+    image_tag.short_description = 'Image'
+    image_tag.allow_tags = True
+
 
 class Order(models.Model):
     user = models.ForeignKey(User)

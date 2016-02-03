@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^', include('myshopping.urls')),
     url(r'^', include('users.urls')),
     url(r'^$', IndexView.as_view(), name="user-home"),
+    # url(r'', include('django_braintree.urls')),
 
 ]
 

@@ -56,18 +56,9 @@
                         <h4 class="pull-right">${{product.product_price}}</h4>
                         <h4><a href="{% url 'product_detail' product.id %}">{{product.product_name}}</a>
                         </h4>
-                        <p>{{product.product_description}}</p>
+                        <p class="product_des">{{product.product_description}}</p>
                     </div>
-                    <div class="ratings">
-                        <p class="pull-right">15 reviews</p>
-                        <p>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                        </p>
-                    </div>
+
                 </div>
             </div>
             {% endfor %}

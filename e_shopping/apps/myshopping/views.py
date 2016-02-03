@@ -142,8 +142,8 @@ class SendMailToAdmin(View):
         message = render_to_string(
                     "email/notification.html", data_dict)
 
-        from_email = settings.EMAIL_HOST_USER
-        to_user = 'info@cinnamonhills.com'
+        from_email = 'info@cinnamonhills.com'
+        to_user = 'store@vdavis.me'
         if subject and message and from_email:
             try:
                 send_mail(subject, message, from_email, [to_user])

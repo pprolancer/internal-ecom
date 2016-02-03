@@ -4,7 +4,7 @@
 {% load basket_total %}
 {% csrf_token %}
 
-<div class="messages">
+<div class="messages" style="margin-top: 3cm;">
     {% if messages %}
     {% for message in messages %}
     <div class='alert alert-{% if message.tags %}{{ message.tags }}{% endif %}'>
@@ -41,7 +41,7 @@
                 <label><input type="checkbox" name="moneyorder" id="moneyorder">Money order or Check </label>
             </div>
             <div class="checkbox">
-              <label><input type="checkbox" name="creditcard" id="creditcard">Creditcard</label>
+              <label><input type="checkbox" disabled="disabled"  name="creditcard" id="creditcard">Creditcard</label>
             </div>
         </div>
         <div class="modal-footer">
@@ -92,6 +92,9 @@
                         {% thumbnail prt.product.product_image.image "100x100" crop="center" as im %}
                         <img src="{{im.url}}" width="{{im.width}}" height="{{ im.height }}">
                         {% endthumbnail %}
+
+                    {% else %}
+                    <img src="http://placehold.it/320x150" alt="" width="50" height="50">
                     {% endif %}
                     </div>
                     <div class="col-sm-4">

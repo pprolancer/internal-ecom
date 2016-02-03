@@ -9711,3 +9711,6 @@ input[type="number"][id*="quantity"] {
 padding-left: 611px;
 font-size: 15px;
 }*/
+.product_des {
+  word-wrap: break-word;
+}
