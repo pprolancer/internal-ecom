@@ -1,6 +1,6 @@
 # Student gift store
 
-The idea behind this store is to provide a way for parents to buy gifts for students at a private bourding school.
+The idea behind this store is to provide a way for parents to buy gifts for students at a private boarding school.
 What makes this different from a normal store?
 * No shipping
 * No revies on products
