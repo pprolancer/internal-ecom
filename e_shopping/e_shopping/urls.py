@@ -26,9 +26,9 @@ urlpatterns = [
 
     url(r'^admin/', admin.site.urls),
     url(r'^', include('myshopping.urls')),
-    url(r'^user/', include('users.urls')),
+    url(r'^', include('users.urls')),
     url(r'^$', IndexView.as_view(), name="user-home"),
-    
+
 ]
 
 if settings.DEBUG:

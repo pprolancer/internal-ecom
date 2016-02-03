@@ -40,21 +40,23 @@
             </div>
 
         </div>
-                {% thumbnail prt.image "100x100" crop="center" as im %}
-                  dsadsaddsadsad <img src="{{ MEDIA_URL }}{{prt.image}}" width="100" height="{{ 100 }}">
-                {% endthumbnail %}
-
         <div class="row">
-            {% for prt in products  %}
-            <div class="col-sm-4 col-lg-4 col-md-4 product {{prt.product.category.id}}" id="{{prt.product.category.id}}">
+            {% for product in products  %}
+            <div class="col-sm-4 col-lg-4 col-md-4 product {{product.category.id}}" id="{{product.category.id}}">
                 <div class="thumbnail">
-                    <!-- <img src="http://placehold.it/320x150" alt=""> -->
+                    {% if product.product_image %}
+
+                        {% thumbnail product.product_image.image "100x100" crop="center" as im %}
+                        <img src="{{im.url}}" width="{{im.width}}" height="{{ im.height }}">
+                        {% endthumbnail %}
+                    {% endif %}
+
 
                     <div class="caption">
-                        <h4 class="pull-right">${{prt.product.product_price}}</h4>
-                        <h4><a href="{% url 'product_detail' prt.product.id %}">{{prt.product.product_name}}</a>
+                        <h4 class="pull-right">${{product.product_price}}</h4>
+                        <h4><a href="{% url 'product_detail' product.id %}">{{product.product_name}}</a>
                         </h4>
-                        <p>{{prt.product.product_description}}</p>
+                        <p>{{product.product_description}}</p>
                     </div>
                     <div class="ratings">
                         <p class="pull-right">15 reviews</p>
@@ -86,7 +88,6 @@
 {% endblock content %}
 
 {% block javascript %}
-<!-- <script src="/static/js/jquery.js" ></script> -->
 <script type="text/javascript">
 $( document ).ready(function() {
 $('.category-list').click(function() {

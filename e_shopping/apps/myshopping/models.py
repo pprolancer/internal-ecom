@@ -46,6 +46,12 @@ class Product(models.Model):
     def __str__(self):
         return self.product_name
 
+    @property
+    def product_image(self):
+        images= self.productimage.all()
+        image = images and images[0] or False
+        return  image
+
 
 class Cart(models.Model):
     user = models.ForeignKey(User)

@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 import sys
 from unipath import Path
-from settings_secret import *
+from e_shopping.settings.settings_secret import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_DIR = Path(__file__).ancestor(3)
@@ -60,6 +60,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'e_shopping.core.middleware.AutoLogout',
 ]
 
 ROOT_URLCONF = 'e_shopping.urls'
@@ -134,3 +135,4 @@ STATICFILES_DIRS = [
     
 ]
 
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer' # support auto logout for inactive user

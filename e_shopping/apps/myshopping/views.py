@@ -14,9 +14,10 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.core.mail import send_mail
+from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
+from django.conf import settings
 # Create your views here.
 
 
@@ -27,7 +28,7 @@ class HomeView(View):
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         categories = Category.objects.all()
-        products = ProductImage.objects.all()
+        products = Product.objects.all()
         ctx = {'categories':categories,'products':products}
         return render(request, "myshopping/home.html", ctx)
 
@@ -43,7 +44,7 @@ class Product_detailView(View):
         ctx = {'product':product,'categories':categories}
         return render(request, "myshopping/product_detail.html", ctx)
 
-
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         product_id = request.POST.get('add_basket',None)
         products = Product.objects.filter(id=product_id)
@@ -62,6 +63,7 @@ class RemoveFromCartView(View):
 
     """ Remove Product from Cart """
 
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         product_id = request.POST.get('product_id',None)
         cart_id = request.POST.get('cart_id',None)
@@ -74,6 +76,7 @@ class RemoveFromCartView(View):
 class UpdateCartView(View):
 
     """ Update Product Quantity Of Cart """
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         product_id = request.POST.get('save_later',None)
         quantity= request.POST.get('quantity',None)
@@ -86,6 +89,7 @@ class UpdateCartView(View):
 
 class ProcessdCheckout(View):
 
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         user_quantity = Cart.objects.filter(user_id=request.user).aggregate(total=Sum('quantity'))
         user_price = Cart.objects.filter(user_id=request.user).aggregate(total=Sum('price'))
@@ -130,6 +134,7 @@ class AddToCartView(View):
 
 
 class SendMailToAdmin(View):
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         orders = Order.objects.filter(user=request.user)
         subject = "Cinnemohills Online shopping"
@@ -137,10 +142,11 @@ class SendMailToAdmin(View):
         message = render_to_string(
                     "email/notification.html", data_dict)
 
-        from_email = ""
+        from_email = settings.EMAIL_HOST_USER
+        to_user = 'info@cinnamonhills.com'
         if subject and message and from_email:
             try:
-                send_mail(subject, message, from_email, [''])
+                send_mail(subject, message, from_email, [to_user])
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
             return HttpResponse(

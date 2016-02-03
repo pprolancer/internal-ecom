@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load thumbnail %}
 {% block content %}
 
         <div class="row">
@@ -14,12 +15,16 @@
 
             <div class="col-md-9">
                 <div class="thumbnail">
-                    <img class="img-responsive" src="http://placehold.it/800x300" alt="">
+                    {% if product.product_image %}
+
+                        {% thumbnail product.product_image.image "100x100" crop="center" as im %}
+                        <img src="{{im.url}}" width="{{im.width}}" height="{{ im.height }}">
+                        {% endthumbnail %}
+                    {% endif %}
                     <div class="caption-full">
                         <h4 class="pull-right">${{product.product_price}}</h4>
                         <h4><a href="#">{{product.product_name}}</a>
                         </h4>
-
                         <p>{{product.product_description}}</p>
                     </div>
                     <div class="text-left">

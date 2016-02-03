@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+{% load thumbnail %}
 {% load basket_total %}
 {% csrf_token %}
 
@@ -86,9 +87,12 @@
                 <div class="row" >
                     <div class="col-sm-2">
                         <input id="id_form-0-id" name="form-0-id" type="hidden" value="2873">
-                                <a href="#">
-                                    <img class="thumbnail" src="" alt="">
-                                </a>
+                        {% if prt.product.product_image %}
+
+                        {% thumbnail prt.product.product_image.image "100x100" crop="center" as im %}
+                        <img src="{{im.url}}" width="{{im.width}}" height="{{ im.height }}">
+                        {% endthumbnail %}
+                    {% endif %}
                     </div>
                     <div class="col-sm-4">
                         <h3><a href="">{{prt.product.product_name}}</a></h3>

@@ -7,9 +7,10 @@ from django.contrib.auth import views as auth_views
 from django.views.static import serve
 
 urlpatterns = [
+
 	url(r'^admin/', include(admin.site.urls)),
     url(r'^register/$', RegisterView.as_view(), name="user-register"),
-    url(r'^login/$', LoginView.as_view(), name="user-login"),
+    url(r'^accounts/login/$', LoginView.as_view(), name="user-login"),
     url(r'^logout/$', LogoutView.as_view(), name="logout"),
     
 ]
