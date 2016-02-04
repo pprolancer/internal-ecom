@@ -3,11 +3,11 @@ from sorl.thumbnail import ImageField
 from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User
 from datetime import datetime
-from sorl.thumbnail import ImageField
 from auditlog.registry import auditlog
 import uuid
 import os
 from decimal import Decimal
+from users.models import UserProfile
 # Create your models here.
 
 ORDER_STATUS = (
@@ -58,7 +58,6 @@ class Cart(models.Model):
     product = models.ForeignKey("Product", related_name ='productcart')
     creation_date = models.DateTimeField(auto_now_add=True, blank=True)
     quantity = models.IntegerField("Quantity", default=0)
-    # price = models.CharField("Product cart Price", max_length=100)
     price = models.DecimalField(max_digits=8, decimal_places=2)
 
     class Meta:
@@ -73,6 +72,13 @@ class Cart(models.Model):
         except:
             pass
         return True
+
+
+    # def user_name(self):
+    #     import pdb;pdb.set_trace()
+    #     return self.user.user
+
+
 
 class ProductImage(models.Model):
     product = models.ForeignKey("Product", related_name ='productimage')

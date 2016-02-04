@@ -1,6 +1,7 @@
 from django import template
-from myshopping.models import *
+from myshopping.models import (Category, Product, Cart, ProductImage, Order)
 from django.db.models import Sum
+from users.models import Relationship
 
 register = template.Library()
 
@@ -24,3 +25,13 @@ def quantity_price_total(product):
 def catergory_lists():
     catergory_lists = Category.objects.all()
     return {'catergory_lists': catergory_lists }
+
+
+@register.assignment_tag
+def parent_student_name(name):
+    relationship = Relationship.objects.filter(from_person_id = name.id)
+    to_person = []
+    for name in relationship:
+        to_person.append(name.to_person)
+    print (to_person)
+    return to_person

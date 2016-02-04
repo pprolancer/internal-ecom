@@ -19,9 +19,13 @@ class UserProfile(models.Model):
         verbose_name = "User Profile"
         verbose_name_plural = "User Profiles"
 
+    def __str__(self):
+        return '{0} - {1}'.format(self.user.username, self.user_role)
+
+
 class Relationship(models.Model):
-    from_person = models.ForeignKey(User, related_name='from_people')
-    to_person = models.ForeignKey(User, related_name='to_people')
+    from_person = models.ForeignKey(UserProfile, related_name='from_people')
+    to_person = models.ForeignKey(UserProfile, related_name='to_people')
     status = models.BooleanField(default=False)
 
     class Meta:

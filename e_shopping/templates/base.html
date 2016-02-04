@@ -63,7 +63,9 @@
                         <a href="{% url 'logout' %}">Logout</a>
                     </li>
                     <li>
-                        <a href="#" style="padding-left: 611px;font-size: 15px;color:white">Welcome,{{request.user}}</a>
+                        <a href = "{% url 'add_to_basket' %}" ><b>Cart</b>
+                        </a></li>
+                        <li class="welcomeuser"><a href="#" >Welcome,{{request.user}}-{{request.user.profile.user_role}}</a>
                     </li>
                 </ul>
             </div>

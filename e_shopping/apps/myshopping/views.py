@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from myshopping.models import *
+from myshopping.models import (Category, Product, Cart, ProductImage, Order)
 from django.views.generic import View, TemplateView, CreateView
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
@@ -32,7 +32,7 @@ class HomeView(View):
         ctx = {'categories':categories,'products':products}
         return render(request, "myshopping/home.html", ctx)
 
-class Product_detailView(View):
+class ProductDetailView(View):
 
     """ Show Product Detail Page """
 
@@ -46,7 +46,7 @@ class Product_detailView(View):
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        product_id = request.POST.get('add_basket',None)
+        product_id = request.POST.get('add_basket','')
         products = Product.objects.filter(id=product_id)
         all_cart = Cart.objects.filter(user_id=request.user)
         cart_add = Cart() 
@@ -65,8 +65,8 @@ class RemoveFromCartView(View):
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        product_id = request.POST.get('product_id',None)
-        cart_id = request.POST.get('cart_id',None)
+        product_id = request.POST.get('product_id','')
+        cart_id = request.POST.get('cart_id','')
         cart = Cart.objects.get(pk=cart_id,product_id=product_id,user_id=request.user)
         cart.delete()
         return HttpResponse(
@@ -78,8 +78,8 @@ class UpdateCartView(View):
     """ Update Product Quantity Of Cart """
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        product_id = request.POST.get('save_later',None)
-        quantity= request.POST.get('quantity',None)
+        product_id = request.POST.get('save_later','')
+        quantity= request.POST.get('quantity','')
         cart = Cart.objects.get(product_id=product_id,user_id=request.user)
         if cart:
             cart = Cart.objects.filter(product_id=product_id,user_id=request.user).update(quantity=quantity)

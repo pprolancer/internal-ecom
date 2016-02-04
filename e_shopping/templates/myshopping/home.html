@@ -1,14 +1,32 @@
 {% extends "base.html" %}
 {% load thumbnail %}
+{% load basket_total %}
 {% block content %}
-    <div class="col-md-3">
-        <p class="lead">Shop Name</p>
+
+    {% if  request.user.profile.user_role == 'parent' %}
+
+    <div class="alert alert-success fade in">
+    <a href="#" class="close" data-dismiss="alert">&times;</a>
+    {{request.user.id}}
+    <strong>Welcome </strong>{{request.user.username}},to the Cinnamonhills Gift store
+    {% parent_student_name  request.user as name %}
+    <p>{{name}}</p>
+    </div>
+   
+    {% endif %}
+
+
+
+        <div class="col-md-3">
+        <p class="lead">All Category</p>
         <div class="list-group">
         {% for category in categories %}
             <a href="#" class="list-group-item category-list" id="{{category.id}}">{{category.title}}</a>
         {% endfor %}
         </div>
     </div>
+
+
 
     <div class="col-md-9">
 
@@ -62,14 +80,6 @@
                 </div>
             </div>
             {% endfor %}
-
-
-<!--             <div class="col-sm-4 col-lg-4 col-md-4">
-                <h4><a href="#">Like this template?</a>
-                </h4>
-                <p>If you like this template, then check out <a target="_blank" href="http://maxoffsky.com/code-blog/laravel-shop-tutorial-1-building-a-review-system/">this tutorial</a> on how to build a working review system for your online store!</p>
-                <a class="btn btn-primary" target="_blank" href="http://maxoffsky.com/code-blog/laravel-shop-tutorial-1-building-a-review-system/">View Tutorial</a>
-            </div> -->
 
         </div>
 
