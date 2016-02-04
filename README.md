@@ -18,7 +18,8 @@ Parents may only buy gifts for specific events. For example birthday and Christm
 ## Cart limits:
 Cart limits are set per event, per student, per parent. 
 For example: 
-* If Mike a student has a 3 gift $100 limit. These limits apply to each event, 3 gifts, $100 for Christmas, and another 3 gift $100 for Birthday.
-* If a Jill a Parent has a 1 gift $50 Limit and can buy gifts for Mike. Then she can only play 1 gift up to $50 for Christmas and another 1 gift up to $50  as a birthday gift.
+* Mike, a student, has a 3 gift $100 limit. These limits apply to each event, 3 gifts, $100 for Christmas, and another 3 gift $100 for Birthday.
+* Jill, a Parent, has a 1 gift $75 Limit and can buy gifts for Mike. Then she can only play 1 gift up to $75 for Christmas and another 1 gift up to $75  as a birthday gift.
+* Jack, a parent, has a 3 gift $200 limit. If Jill buys a buys Mike 1 $75 gift for Christmas, then Jack can buy Mike 2 gift totaling no more that $25 for Christmas.
 
 
