@@ -25,3 +25,6 @@ For example:
 ## Shopping
 When Parent logins they see there Student and event they can shop for.
 See issue Welcome page #22
+
+## Checkout
+For each item parent must choose Student and event.
