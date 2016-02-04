@@ -10,7 +10,9 @@ What makes this different from a normal store?
 * Parents can only buy gifts for related students (related in admin interface)
 
 ## Events:
-Parents may only buy gifts for specific events. For example birthday and Christmas. Each event has an effective window. There are 2 event types. Personal (birthday) and Holiday (Christmans, New years..). Eligible window, the time before and after an date a gift can be purchased for that event. For exmple, for a Birthday a Parent can buy a gift for 30 day before or 7 days after. For Christmas 60 days before and 7 days after. 
+Parents may only buy gifts for specific events. For example birthday and Christmas. Each event has an effective window. There are 2 event types. Personal (birthday) and Holiday (Christmans, New years..). Eligible window, the time before and after an date a gift can be purchased for that event. For exmple, for a Birthday a Parent can buy a gift for 30 day before or 7 days after. For Christmas 60 days before and 7 days after.
+* two event types, (personal and Holidays)
+* Each event type has a pre and post limit.
 
 
 ## Cart limits:
