@@ -3,21 +3,22 @@
 {% load basket_total %}
 {% block content %}
 
+ {% if user.is_authenticated %}
     {% if  request.user.profile.user_role == 'parent' %}
-
     <div class="alert alert-success fade in">
-    <a href="#" class="close" data-dismiss="alert">&times;</a>
-    {{request.user.id}}
-    <strong>Welcome </strong>{{request.user.username}},to the Cinnamonhills Gift store
-    {% parent_student_name  request.user as name %}
-    <p>{{name}}</p>
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        <strong>Welcome </strong>{{request.user.username}},to the Cinnamonhills Gift store
+        {% parent_student_name  request.user as child_names %}
+          <ul class="list-group">
+          {% for child_name in child_names %}
+          <li >{{child_name.to_person.user.username}},item-{{child_name.to_person.user.profile.product_count}},${{child_name.to_person.user.profile.product_price_limit}}</li>
+          {% endfor %}
+          </ul>
     </div>
-   
+    {% endif %}
     {% endif %}
 
-
-
-        <div class="col-md-3">
+    <div class="col-md-3">
         <p class="lead">All Category</p>
         <div class="list-group">
         {% for category in categories %}
@@ -25,8 +26,6 @@
         {% endfor %}
         </div>
     </div>
-
-
 
     <div class="col-md-9">
 

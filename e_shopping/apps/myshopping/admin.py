@@ -10,11 +10,21 @@ class ProductImageInline(admin.TabularInline):
     
     readonly_fields = ('image_tag',)
 
+
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ("user", "product", "item_quantity","item_price", "product_purchas_date", "order_status")
+    list_display = ("user", "product",
+        "item_quantity","item_price", "product_purchas_date",
+        "order_status", "to_person")
 
     def has_add_permission(self, request, obj=None):
         return False
+
+    def to_person(self, obj):
+        to_users = ""
+        for usr in obj.user.from_people.all():
+            to_users = to_users+usr.to_person.user.username+", "
+        return to_users
+
 
 class ProductAdmin(admin.ModelAdmin):
     """docstring for ProductAdmin"""
@@ -22,22 +32,16 @@ class ProductAdmin(admin.ModelAdmin):
         ProductImageInline,
     ]
 
-# class UserProfileInline(admin.TabularInline):
-#     """To show Image with Product """
 
-#     model = UserProfile
-#     readonly_fields = ('user_role',)
+class CartAdmin(admin.ModelAdmin):
+    list_display = ("user","product","creation_date","quantity","price")
 
-# class CartAdmin(admin.ModelAdmin):
-#     list_display = ("user","user_role", "product", "quantity","price")
-    # inlines = [
-    #     UserProfileInline,
-    # ]
-
+    def has_add_permission(self, request, obj=None):
+        return False
 
 admin.site.register(Category)
 admin.site.register(Product, ProductAdmin)
-admin.site.register(Cart)
+admin.site.register(Cart, CartAdmin)
 admin.site.register(ProductImage)
 admin.site.register(Order, OrderAdmin)
 

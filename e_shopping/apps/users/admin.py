@@ -10,7 +10,6 @@ class UserProfileAdmin(admin.ModelAdmin):
     def has_add_permission(self, request, obj=None):
         return True
 
-
 # admin.site.register(Parents)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Relationship)

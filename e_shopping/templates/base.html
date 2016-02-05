@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load thumbnail %}
+{% load basket_total %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,6 +27,33 @@
 </head>
 
 <body>
+    <!-- Modal HTML -->
+    {% if user.is_authenticated %}
+    {% parent_student_name  request.user as child_names %}
+
+    <div id="showParentStudent" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"><b>Welcome-{{request.user.username}},to the Cinnamonhills Gift store</b></h4>
+                </div>
+                {% if child_names%}
+                {% for child_name in child_names %}
+                <div class="modal-body">
+                    <p>{{child_name.to_person.user.username}},item-{{child_name.to_person.user.profile.product_count}},${{child_name.to_person.user.profile.product_price_limit}}</p>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div>Contact To Admin</div>
+                {% endif %}
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -51,13 +79,13 @@
 
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="#">About</a>
+                        <a href="javascript:void(0)">About</a>
                     </li>
                     <li>
-                        <a href="#">Services</a>
+                        <a href="javascript:void(0)">Services</a>
                     </li>
                     <li>
-                        <a href="#">Contact</a>
+                        <a href="javascript:void(0)">Contact</a>
                     </li>
                     <li>
                         <a href="{% url 'logout' %}">Logout</a>
@@ -66,6 +94,9 @@
                         <a href = "{% url 'add_to_basket' %}" ><b>Cart</b>
                         </a></li>
                         <li class="welcomeuser"><a href="#" >Welcome,{{request.user}}-{{request.user.profile.user_role}}</a>
+                    </li>
+                    <li>
+                        <a href="#showParentStudent" class="btn btn-lg " data-toggle="modal">Purchas Gifts</a>
                     </li>
                 </ul>
             </div>
@@ -108,7 +139,15 @@
     
     {% block javascript %}
 
-        {% endblock %}
+    <script type="text/javascript">
+    $(".purchasgift").click(function(){
+        alert("hello")
+
+    });
+
+    </script>
+
+    {% endblock %}
 </body>
 
 </html>

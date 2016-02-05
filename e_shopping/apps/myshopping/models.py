@@ -54,7 +54,7 @@ class Product(models.Model):
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(UserProfile, related_name="user_cards", blank=True, null=True)
     product = models.ForeignKey("Product", related_name ='productcart')
     creation_date = models.DateTimeField(auto_now_add=True, blank=True)
     quantity = models.IntegerField("Quantity", default=0)
@@ -74,12 +74,6 @@ class Cart(models.Model):
         return True
 
 
-    # def user_name(self):
-    #     import pdb;pdb.set_trace()
-    #     return self.user.user
-
-
-
 class ProductImage(models.Model):
     product = models.ForeignKey("Product", related_name ='productimage')
     image = models.ImageField(
@@ -96,13 +90,17 @@ class ProductImage(models.Model):
 
 
 class Order(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(UserProfile , related_name="user_orders", blank=True, null=True)
     product = models.ForeignKey("Product", related_name ='order_product')
     product_purchas_date = models.DateTimeField(auto_now_add=True, blank=True)
     item_quantity = models.IntegerField("Item Order Quantity", default=0)
     item_price = models.DecimalField(max_digits=8, decimal_places=2)#default=Decimal(0.0)
     order_status = models.CharField(
         "User Order Status", max_length=50, choices=ORDER_STATUS)
+
     class Meta:
         verbose_name = "Orders"
         verbose_name_plural = "Orders"
+
+    
+

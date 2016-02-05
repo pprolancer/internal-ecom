@@ -48,12 +48,13 @@ class ProductDetailView(View):
     def post(self, request, *args, **kwargs):
         product_id = request.POST.get('add_basket','')
         products = Product.objects.filter(id=product_id)
-        all_cart = Cart.objects.filter(user_id=request.user)
+        user_profile = UserProfile.objects.get(user_id=request.user)
+        all_cart = Cart.objects.filter(user=user_profile)
         cart_add = Cart() 
         quantity = "1"
-        cart =  Cart.objects.filter(product_id=product_id,user_id=request.user)
+        cart =  Cart.objects.filter(product_id=product_id,user=user_profile)
         if not cart:
-            cart_add.add(request.user,products[0],products[0].product_price,quantity)
+            cart_add.add(user_profile,products[0],products[0].product_price,quantity)
         ctx = {'products':all_cart}
         return redirect(reverse('add_to_basket'))
 
@@ -78,11 +79,12 @@ class UpdateCartView(View):
     """ Update Product Quantity Of Cart """
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
+        user_profile = UserProfile.objects.get(user_id=request.user)
         product_id = request.POST.get('save_later','')
         quantity= request.POST.get('quantity','')
-        cart = Cart.objects.get(product_id=product_id,user_id=request.user)
+        cart = Cart.objects.get(product_id=product_id,user_id=user_profile)
         if cart:
-            cart = Cart.objects.filter(product_id=product_id,user_id=request.user).update(quantity=quantity)
+            cart = Cart.objects.filter(product_id=product_id,user_id=user_profile).update(quantity=quantity)
 
         return HttpResponse(
             json.dumps({'status': True,'product_id':product_id}), content_type="application/json")
@@ -91,16 +93,16 @@ class ProcessdCheckout(View):
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        user_quantity = Cart.objects.filter(user_id=request.user).aggregate(total=Sum('quantity'))
-        user_price = Cart.objects.filter(user_id=request.user).aggregate(total=Sum('price'))
         profile_user = UserProfile.objects.get(user_id=request.user)
+        user_quantity = Cart.objects.filter(user_id=profile_user).aggregate(total=Sum('quantity'))
+        user_price = Cart.objects.filter(user_id=profile_user).aggregate(total=Sum('price'))
         if (user_quantity['total'] <= profile_user.product_count) and (user_price['total']<= profile_user.product_price_limit):
-            cart_remove = Cart.objects.filter(user_id=request.user)
+            cart_remove = Cart.objects.filter(user_id=profile_user)
             for i in cart_remove:
-                order , created = Order.objects.get_or_create(user=request.user,
+                order , created = Order.objects.get_or_create(user=profile_user,
                     product_id=i.product_id,item_quantity=i.quantity,item_price=i.price,order_status='Pending')
                 order.save()
-                cart_delete = Cart.objects.filter(user=request.user,product_id=i.product_id)
+                cart_delete = Cart.objects.filter(user_id=profile_user,product_id=i.product_id)
                 cart_delete.delete()
 
             return HttpResponse(
@@ -122,7 +124,8 @@ class AddToCartView(View):
     """ Show Product into Basket """
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
-        all_cart = Cart.objects.filter(user_id=request.user)
+        user_profile = UserProfile.objects.get(user_id=request.user)
+        all_cart = Cart.objects.filter(user_id=user_profile)
         try:
             profile_user = UserProfile.objects.get(user_id=request.user)
             ctx = {'products':all_cart}
@@ -136,7 +139,8 @@ class AddToCartView(View):
 class SendMailToAdmin(View):
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        orders = Order.objects.filter(user=request.user)
+        user_profile = UserProfile.objects.get(user_id=request.user)
+        orders = Order.objects.filter(user_id=user_profile)
         subject = "Cinnemohills Online shopping"
         data_dict = {'orders':orders}
         message = render_to_string(
@@ -151,7 +155,6 @@ class SendMailToAdmin(View):
                 return HttpResponse('Invalid header found.')
             return HttpResponse(
                 json.dumps({'status': 'send_mail'}), content_type="application/json")
-            # return HttpResponseRedirect('/contact/thanks/')
         else:
             # In reality we'd use a form class
             # to get proper validation errors.
