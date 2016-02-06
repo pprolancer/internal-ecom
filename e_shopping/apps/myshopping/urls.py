@@ -1,11 +1,12 @@
 from django.conf.urls import  url
 from django.views.generic import TemplateView
-from myshopping.views import (HomeView, ProductDetailView, RemoveFromCartView,
+from myshopping.views import (IndexView,HomeView, ProductDetailView, RemoveFromCartView,
 	UpdateCartView, ProcessdCheckout, CheckoutList, AddToCartView,
 	SendMailToAdmin)
 
 urlpatterns = [
 
+    url(r'^index/$', IndexView.as_view(), name="welcome"),
     url(r'^home/$', HomeView.as_view(), name="home"),
     url(r'^productdetail/(?P<pk>\d+)/$', ProductDetailView.as_view(), name="product_detail"),
     url(r'^remove_frpm_cart/$', RemoveFromCartView.as_view(), name="remove_frpm_cart"),

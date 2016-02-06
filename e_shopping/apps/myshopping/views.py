@@ -21,6 +21,20 @@ from django.conf import settings
 # Create your views here.
 
 
+class IndexView(View):
+
+    """ Show Student for whom Parent have to buy gift """
+
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        return render(request, "index.html", {})
+
+    def post(self, request, *args, **kwargs):
+        request.session['to_person'] = request.POST.get('to_person')
+        return redirect(reverse('home'))
+
+
+
 class HomeView(View):
 
     """ Show Product with Category """
@@ -66,9 +80,10 @@ class RemoveFromCartView(View):
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
+        user_profile = UserProfile.objects.get(user_id=request.user)
         product_id = request.POST.get('product_id','')
         cart_id = request.POST.get('cart_id','')
-        cart = Cart.objects.get(pk=cart_id,product_id=product_id,user_id=request.user)
+        cart = Cart.objects.get(pk=cart_id,product_id=product_id,user_id=user_profile)
         cart.delete()
         return HttpResponse(
             json.dumps({'status': True,'cart_id':cart_id}), content_type="application/json")

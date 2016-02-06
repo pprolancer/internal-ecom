@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'auditlog',
     'myshopping',
     'users',
+    'event',
 ]
 
 MIDDLEWARE_CLASSES = [

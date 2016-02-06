@@ -1,5 +1,36 @@
-{% extends "base.html" %}
+{% extends "header.html" %}
 {% block content %}
+{% load basket_total %}
 
+<form class = "form-horizontal" action="." method="post">
+{% csrf_token %}
+
+
+   
+   <div class = "form-group">
+      <div class = "col-sm-offset-2 col-sm-10">
+    {% if user.is_authenticated %}
+    {% if  request.user.profile.user_role == 'parent' %}
+      <strong>Welcome </strong>{{request.user.username}},to the Cinnamonhills Gift store
+      {% parent_student_name  request.user as child_names %}
+      {% for child_name in child_names %}
+
+         <div class = "checkbox">
+            <label><input id="to_person" name="to_person" type ="checkbox" value="{{child_name.to_person.user.username}}">{{child_name.to_person.user.username}},item-{{child_name.to_person.user.profile.product_count}},${{child_name.to_person.user.profile.product_price_limit}}</label>
+         </div>
+       {% endfor %}
+    {% endif %}
+    {% endif %}
+      </div>
+    
+   </div>
+   
+   <div class = "form-group">
+      <div class = "col-sm-offset-2 col-sm-10">
+         <button type="submit" class = "btn btn-primary">Next</button>
+      </div>
+   </div>
+	
+</form>
         
 {% endblock content %}

@@ -102,5 +102,3 @@ class Order(models.Model):
         verbose_name = "Orders"
         verbose_name_plural = "Orders"
 
-    
-

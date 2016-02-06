@@ -14,7 +14,10 @@ class UserProfile(models.Model):
     user_role = models.CharField(
         "User Role", max_length=50, choices=USER_TYPES)
     product_count = models.IntegerField(default=0)
-    product_price_limit = models.PositiveIntegerField(default=0,validators=[MinValueValidator(0)])
+    product_price_limit = models.PositiveIntegerField(default=0,
+        validators=[MinValueValidator(0)])
+    birth_date =  models.DateField(
+        blank=True, null=True)
     
 
     class Meta:
