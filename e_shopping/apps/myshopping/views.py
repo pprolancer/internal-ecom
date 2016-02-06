@@ -3,7 +3,6 @@ from myshopping.models import (Category, Product, Cart, ProductImage, Order)
 from django.views.generic import View, TemplateView, CreateView
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
-from django.http import HttpResponse
 import json
 from users.models import UserProfile
 from django.shortcuts import render_to_response

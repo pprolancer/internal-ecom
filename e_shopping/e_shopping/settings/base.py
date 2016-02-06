@@ -14,7 +14,7 @@ import os
 import sys
 from unipath import Path
 from e_shopping.settings.settings_secret import (EMAIL_HOST , EMAIL_PORT, EMAIL_HOST_USER,
-    EMAIL_HOST_PASSWORD, EMAIL_USE_TLS, DEFAULT_EMAIL_FROM)
+    EMAIL_HOST_PASSWORD, EMAIL_USE_TLS, DEFAULT_EMAIL_FROM, SECRET_KEY)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_DIR = Path(__file__).ancestor(3)
@@ -26,9 +26,6 @@ sys.path.insert(0, Path(PROJECT_DIR, 'apps'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '$dx&!(wm$%qjye+r^+4v$kplvaadub^%yzwr)5f(5fmib7&*^j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
