@@ -89,27 +89,40 @@
                         <a href="javascript:void(0)">Contact</a>
                     </li>
                     <li>
-                        <a href="{% url 'logout' %}">Logout</a>
+                        <a href = "{% url 'add_to_basket' %}" ><b>Cart</b>
+                        </a>
                     </li>
                     <li>
-                        <a href = "{% url 'add_to_basket' %}" ><b>Cart</b>
-                        </a></li>
-                        <li class="welcomeuser"><a href="#" >Welcome,{{request.user}}-you are buying Gift for-{{request.session.to_person}}</a>
+                        <a href="{% url 'logout' %}">Logout</a>
                     </li>
+                    {% if request.session.to_person_name %}
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Welcome,{{request.user}}<span class="caret"></span></a>
+                      <ul class="dropdown-menu ">
+                      <li>You are Purchasing gift-</li>
+                    {% for person in request.session.to_person_name %}
+                        <li ><a href="#">{{person}}</a></li>
+                    {% endfor %}
+                      </ul>
+                    
+                    </li>
+                    {% else %}
+                    <li><a href="{% url 'welcome' %}">Please select user</a></li>
+                    {% endif %}
                     <li>
                         <a href="#showParentStudent" class="btn btn-lg " data-toggle="modal">Purchas Gifts</a>
                     </li>
                 </ul>
             </div>
             {% else %}
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
                 <ul class="nav navbar-nav">
                     <li>
                         <a href="{% url 'user-login' %}">Login</a>
                     </li>
                 </ul>
-            </div>
+        </div>
             {%endif%}
             <!-- /.navbar-collapse -->
         </div>

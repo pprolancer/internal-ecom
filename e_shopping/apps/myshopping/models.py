@@ -54,7 +54,8 @@ class Product(models.Model):
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(UserProfile, related_name="user_cards", blank=True, null=True)
+    from_user = models.ForeignKey(UserProfile, related_name="fromuser_cards", blank=True, null=True)
+    to_user = models.ForeignKey(UserProfile, related_name="touser_cards", blank=True, null=True)
     product = models.ForeignKey("Product", related_name ='productcart')
     creation_date = models.DateTimeField(auto_now_add=True, blank=True)
     quantity = models.IntegerField("Quantity", default=0)
@@ -64,11 +65,13 @@ class Cart(models.Model):
         verbose_name = 'cart'
         verbose_name_plural = 'carts'
 
-    def add(self,user,product,price,quantity):
+    def add(self,from_user,to_users,product,price,quantity):
         try:
-            cart, created = Cart.objects.get_or_create(user=user,
-                product=product,price=price, quantity= quantity)
-            cart.save()
+            for to_user in to_users:
+                to_user_card = UserProfile.objects.get(user=to_user)
+                cart, created = Cart.objects.get_or_create(from_user=from_user,
+                    product=product,price=price, quantity= quantity,to_user=to_user_card)
+                cart.save()
         except:
             pass
         return True
@@ -90,7 +93,8 @@ class ProductImage(models.Model):
 
 
 class Order(models.Model):
-    user = models.ForeignKey(UserProfile , related_name="user_orders", blank=True, null=True)
+    from_user = models.ForeignKey(UserProfile , related_name="fromuser_orders", blank=True, null=True)
+    to_user = models.ForeignKey(UserProfile, related_name="touser_orders", blank=True, null=True)
     product = models.ForeignKey("Product", related_name ='order_product')
     product_purchas_date = models.DateTimeField(auto_now_add=True, blank=True)
     item_quantity = models.IntegerField("Item Order Quantity", default=0)

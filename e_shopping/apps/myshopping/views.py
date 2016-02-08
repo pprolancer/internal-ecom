@@ -29,7 +29,9 @@ class IndexView(View):
         return render(request, "index.html", {})
 
     def post(self, request, *args, **kwargs):
-        request.session['to_person'] = request.POST.get('to_person')
+
+        request.session['to_person_ids'] = request.POST.getlist('to_person_id')
+        request.session['to_person_name'] = request.POST.getlist('to_person_name')
         return redirect(reverse('home'))
 
 
@@ -59,17 +61,23 @@ class ProductDetailView(View):
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        product_id = request.POST.get('add_basket','')
-        products = Product.objects.filter(id=product_id)
-        user_profile = UserProfile.objects.get(user_id=request.user)
-        all_cart = Cart.objects.filter(user=user_profile)
-        cart_add = Cart() 
-        quantity = "1"
-        cart =  Cart.objects.filter(product_id=product_id,user=user_profile)
-        if not cart:
-            cart_add.add(user_profile,products[0],products[0].product_price,quantity)
-        ctx = {'products':all_cart}
-        return redirect(reverse('add_to_basket'))
+        try:
+            product_id = request.POST.get('add_basket','')
+            products = Product.objects.filter(id=product_id)
+            user_profile = UserProfile.objects.get(user_id=request.user)
+            to_users = request.session.get('to_person_ids')
+            all_cart = Cart.objects.filter(from_user=user_profile)
+            cart_add = Cart() 
+            quantity = "1"
+            cart =  Cart.objects.filter(product_id=product_id,
+                    from_user=user_profile,to_user__in=to_users)
+            if not cart:
+                cart_add.add(user_profile,to_users,products[0],products[0].product_price,quantity)
+            ctx = {'products':all_cart}
+            return redirect(reverse('add_to_basket'))
+        except KeyError:
+            return redirect(reverse('user-login'))
+
 
 
 
@@ -79,29 +87,39 @@ class RemoveFromCartView(View):
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        user_profile = UserProfile.objects.get(user_id=request.user)
-        product_id = request.POST.get('product_id','')
-        cart_id = request.POST.get('cart_id','')
-        cart = Cart.objects.get(pk=cart_id,product_id=product_id,user_id=user_profile)
-        cart.delete()
-        return HttpResponse(
-            json.dumps({'status': True,'cart_id':cart_id}), content_type="application/json")
-
+        try:
+            from_user_profile = UserProfile.objects.get(user_id=request.user)
+            product_id = request.POST.get('product_id','')
+            cart_id = request.POST.get('cart_id','')
+            to_user = request.POST.get('to_user','')
+            to_user_profile = UserProfile.objects.get(user_id=to_user)
+            cart = Cart.objects.get(pk=cart_id,product_id=product_id,from_user=from_user_profile,
+                to_user=to_user_profile)
+            cart.delete()
+            return HttpResponse(
+                json.dumps({'status': True,'cart_id':cart_id}), content_type="application/json")
+        except KeyError:
+            return redirect(reverse('user-login'))
 
 class UpdateCartView(View):
 
     """ Update Product Quantity Of Cart """
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        user_profile = UserProfile.objects.get(user_id=request.user)
+        from_user_profile = UserProfile.objects.get(user_id=request.user)
+        to_user = request.POST.get('to_user','')
+        to_user_profile = UserProfile.objects.filter(user_id=to_user)
         product_id = request.POST.get('save_later','')
         quantity= request.POST.get('quantity','')
-        cart = Cart.objects.get(product_id=product_id,user_id=user_profile)
+        cart = Cart.objects.get(product_id=product_id,
+               from_user=from_user_profile,to_user=to_user_profile)
         if cart:
-            cart = Cart.objects.filter(product_id=product_id,user_id=user_profile).update(quantity=quantity)
+            cart = Cart.objects.filter(product_id=product_id,
+                   from_user=from_user_profile,to_user=to_user_profile).update(quantity=quantity)
 
         return HttpResponse(
-            json.dumps({'status': True,'product_id':product_id}), content_type="application/json")
+            json.dumps({'status': True,'product_id':product_id}), 
+            content_type="application/json")
 
 class ProcessdCheckout(View):
 
@@ -139,7 +157,7 @@ class AddToCartView(View):
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         user_profile = UserProfile.objects.get(user_id=request.user)
-        all_cart = Cart.objects.filter(user_id=user_profile)
+        all_cart = Cart.objects.filter(from_user_id=user_profile)
         try:
             profile_user = UserProfile.objects.get(user_id=request.user)
             ctx = {'products':all_cart}

@@ -10,6 +10,8 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.conf import settings
 from users.forms import RegistrationForm
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 
@@ -41,12 +43,12 @@ class RegisterView(View):
 
 class LoginView(View):
 
+
     def get(self, request, *args, **kwargs):
         form = AuthenticationForm()
         ctx = {"form": form}
         return render(request, "registration/login.html", ctx)
 
-    #@method_decorator(login_ip_check)
     def post(self, request, *args, **kwargs):
         form = AuthenticationForm(data=request.POST)
 

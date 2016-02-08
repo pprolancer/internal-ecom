@@ -73,9 +73,11 @@
         <div id="content_inner">
         <div class="basket-title hidden-xs">
             <div class="row">
-                <h2 class="col-sm-6 h3">Items to buy now</h2>
-                <p class="col-sm-3 h3">Quantity</p>
-                <p class="col-sm-1 h3 align-right">Price</p>
+                <h2 class="col-sm-2 h3">Gift Image</h2>
+                <p class="col-sm-2 h3">Student Name</p>
+                <p class="col-sm-2 h3">Gift Name</p>
+                <p class="col-sm-2 h3">Quantity</p>
+                <p class="col-sm-2 h3 align-right">Price</p>
                 <p class="col-sm-2 h3 align-right">Total</p>
             </div>
         </div>
@@ -97,7 +99,10 @@
                     <img src="http://placehold.it/320x150" alt="" width="50" height="50">
                     {% endif %}
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
+                        <h3><a href="" class="to_user_id_{{prt.product.id}}" id="to_user_id_{{prt.product.id}}" data-value="{{prt.to_user.user.id}}">{{prt.to_user.user.username}}</a></h3>
+                   </div>
+                    <div class="col-sm-2">
                         <h3><a href="">{{prt.product}}</a></h3>
                    </div>
                     <div class="col-sm-3">
@@ -177,7 +182,7 @@
 <div class="form-group clearfix">
     <div class="row">
         <div class="col-sm-4 col-sm-offset-8">
-        <button type="button" class="btn btn-info btn-lg processd_to_checkout" data-toggle="modal"  >Proceed to checkout</button>
+        <button type="button" class="btn btn-info btn-lg processd_to_checkout" data-toggle="modal">Proceed to checkout</button>
         </div>
     </div>
 </div>
@@ -195,10 +200,11 @@ $(document).ready(function() {
 $( ".remove_from_cart" ).click(function() {
     var product_id = $(this).attr("data-value")
     var cart_id = $(this).children(':first').val()
+    var to_user = $("#to_user_id_"+product_id).attr('data-value')
     $.ajax({
       type: "POST",
       url: "{% url 'remove_frpm_cart' %}",
-      data: {'product_id':product_id,'cart_id':cart_id, 'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
+      data: {'product_id':product_id,'cart_id':cart_id,'to_user':to_user, 'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
       dataType : "json",
       success: function(data){
         if(data.status){
@@ -214,10 +220,12 @@ $( ".update_product" ).click(function() {
     var quantity = $("#id-quantity_"+save_later).val()
     var product_price = $(".product_price").text()
     var total_price = parseInt(product_price)*parseInt(quantity)
+    var to_user = $("#to_user_id_"+save_later).attr('data-value')
+    
     $.ajax({
       type: "POST",
       url: "{% url 'update_product' %}",
-      data: {'save_later':save_later,'quantity':quantity, 'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
+      data: {'save_later':save_later,'quantity':quantity,'to_user':to_user, 'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
       dataType : "json",
       success: function(data){
         location.reload();

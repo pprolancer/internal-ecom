@@ -25,7 +25,6 @@ class Event(models.Model):
     )
     event_title = models.CharField("Event Title", max_length=255, blank=True, null=True)
     event_start_datetime = models.DateTimeField(blank=True, null=True)
-    event_end_datetime = models.DateTimeField(blank=True, null=True)
     comment = models.CharField(
         "Event Comment", max_length=255, blank=True, null=True)
     created_date = models.DateField(
