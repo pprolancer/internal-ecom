@@ -22,6 +22,8 @@ For example:
 * Jill, a Parent, has a 1 gift $75 Limit and can buy gifts for Mike. Then she can only play 1 gift up to $75 for Christmas and another 1 gift up to $75  as a birthday gift.
 * Jack, a parent, has a 3 gift $200 limit. If Jill buys Mike 1 $75 gift for Christmas, then Jack can buy Mike 2 gift totaling no more that $25 for Christmas.
 
+To achive this the activity for each user and student will need to be track.
+
 ## Shopping
 When Parent logins they see there Student and event they can shop for.
 See issue Welcome page #22
