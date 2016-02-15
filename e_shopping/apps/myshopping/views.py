@@ -17,6 +17,7 @@ from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.conf import settings
+from event.models import Event,EventGiftCondition
 # Create your views here.
 
 
@@ -26,12 +27,11 @@ class IndexView(View):
 
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
+
+        # request.user.profile.get_child()
         return render(request, "index.html", {})
 
     def post(self, request, *args, **kwargs):
-
-        request.session['to_person_ids'] = request.POST.getlist('to_person_id')
-        request.session['to_person_name'] = request.POST.getlist('to_person_name')
         return redirect(reverse('home'))
 
 
@@ -63,16 +63,21 @@ class ProductDetailView(View):
     def post(self, request, *args, **kwargs):
         try:
             product_id = request.POST.get('add_basket','')
+            to_user = request.POST.getlist('to_person_id','')
+            # student_event_id = request.POST.getlist('student_event_id','')
+
             products = Product.objects.filter(id=product_id)
-            user_profile = UserProfile.objects.get(user_id=request.user)
-            to_users = request.session.get('to_person_ids')
-            all_cart = Cart.objects.filter(from_user=user_profile)
+            to_user_profile = UserProfile.objects.filter(id__in=to_user)
+            all_cart = Cart.objects.filter(from_user=request.user.profile,
+                to_user_id__in=to_user_profile)
+
             cart_add = Cart() 
             quantity = "1"
             cart =  Cart.objects.filter(product_id=product_id,
-                    from_user=user_profile,to_user__in=to_users)
+                    from_user=request.user.profile,to_user_id__in=to_user_profile)
             if not cart:
-                cart_add.add(user_profile,to_users,products[0],products[0].product_price,quantity)
+                cart_add.add(request.user.profile,to_user_profile,products[0],products[0].product_price,quantity)
+
             ctx = {'products':all_cart}
             return redirect(reverse('add_to_basket'))
         except KeyError:
@@ -88,13 +93,11 @@ class RemoveFromCartView(View):
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         try:
-            from_user_profile = UserProfile.objects.get(user_id=request.user)
             product_id = request.POST.get('product_id','')
             cart_id = request.POST.get('cart_id','')
             to_user = request.POST.get('to_user','')
-            to_user_profile = UserProfile.objects.get(user_id=to_user)
-            cart = Cart.objects.get(pk=cart_id,product_id=product_id,from_user=from_user_profile,
-                to_user=to_user_profile)
+            cart = Cart.objects.filter(pk=cart_id,product_id=product_id,
+                from_user=request.user.profile,to_user_id=to_user)
             cart.delete()
             return HttpResponse(
                 json.dumps({'status': True,'cart_id':cart_id}), content_type="application/json")
@@ -106,16 +109,17 @@ class UpdateCartView(View):
     """ Update Product Quantity Of Cart """
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        from_user_profile = UserProfile.objects.get(user_id=request.user)
-        to_user = request.POST.get('to_user','')
-        to_user_profile = UserProfile.objects.filter(user_id=to_user)
+
         product_id = request.POST.get('save_later','')
         quantity= request.POST.get('quantity','')
+        to_user = request.POST.get('to_user','')
+        to_user_profile = UserProfile.objects.filter(id=to_user)
+        
         cart = Cart.objects.get(product_id=product_id,
-               from_user=from_user_profile,to_user=to_user_profile)
+               from_user=request.user.profile,to_user=to_user_profile)
         if cart:
             cart = Cart.objects.filter(product_id=product_id,
-                   from_user=from_user_profile,to_user=to_user_profile).update(quantity=quantity)
+                   from_user=request.user.profile,to_user=to_user_profile).update(quantity=quantity)
 
         return HttpResponse(
             json.dumps({'status': True,'product_id':product_id}), 
@@ -125,23 +129,23 @@ class ProcessdCheckout(View):
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        profile_user = UserProfile.objects.get(user_id=request.user)
-        user_quantity = Cart.objects.filter(user_id=profile_user).aggregate(total=Sum('quantity'))
-        user_price = Cart.objects.filter(user_id=profile_user).aggregate(total=Sum('price'))
-        if (user_quantity['total'] <= profile_user.product_count) and (user_price['total']<= profile_user.product_price_limit):
-            cart_remove = Cart.objects.filter(user_id=profile_user)
-            for i in cart_remove:
-                order , created = Order.objects.get_or_create(user=profile_user,
-                    product_id=i.product_id,item_quantity=i.quantity,item_price=i.price,order_status='Pending')
-                order.save()
-                cart_delete = Cart.objects.filter(user_id=profile_user,product_id=i.product_id)
-                cart_delete.delete()
+        # profile_user = UserProfile.objects.get(user_id=request.user)
+        # user_quantity = Cart.objects.filter(user_id=profile_user).aggregate(total=Sum('quantity'))
+        # user_price = Cart.objects.filter(user_id=profile_user).aggregate(total=Sum('price'))
+        # if (user_quantity['total'] <= profile_user.product_count) and (user_price['total']<= profile_user.product_price_limit):
+        #     cart_remove = Cart.objects.filter(user_id=profile_user)
+        #     for i in cart_remove:
+        #         order , created = Order.objects.get_or_create(user=profile_user,
+        #             product_id=i.product_id,item_quantity=i.quantity,item_price=i.price,order_status='Pending')
+        #         order.save()
+        #         cart_delete = Cart.objects.filter(user_id=profile_user,product_id=i.product_id)
+        #         cart_delete.delete()
 
-            return HttpResponse(
-                    json.dumps({'status': 'true'}), content_type="application/json")
-        else:
-            return HttpResponse(
-        json.dumps({'status': 'uptoresult'}), content_type="application/json")
+        return HttpResponse(
+                    json.dumps({'status': True}), content_type="application/json")
+        # else:
+        #     return HttpResponse(
+        # json.dumps({'status': 'uptoresult'}), content_type="application/json")
 
 
 class CheckoutList(View):

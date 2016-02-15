@@ -7,17 +7,28 @@
    <div class = "form-group">
       <div class = "col-sm-offset-2 col-sm-10">
     {% if user.is_authenticated %}
-    {% if  request.user.profile.user_role == 'parent' %}
-      <strong>Welcome </strong>{{request.user.username}},to the Cinnamonhills Gift store
+    {% if request.user.profile.user_role == 'parent' %}
+
+      <strong>Welcome, </strong>{{request.user.username}},to the Cinnamonhills Gift store
       {% parent_student_name  request.user as child_names %}
       {% for child_name in child_names %}
 
-         <div class = "checkbox">
-            <label>
-            <input type="hidden" id="to_person_id" name="to_person_id" value="{{child_name.to_person.user.id}}">
-            <input id="to_person_name" name="to_person_name" type ="checkbox" value="{{child_name.to_person.user.username}}">{{child_name.to_person.user.username}},item-{{child_name.to_person.user.profile.product_count}},${{child_name.to_person.user.profile.product_price_limit}}</label>
+         <div>
+            <h3>
+            {{child_name.to_person.user.username|title}}
+            </h3>
+            {% student_event child_name.to_person_id as events %}
+            <ul>
+            {% for event in events %}
+              <li>{{event.event_title}}-Itemcount({{event.user.user_event_count}}),
+              PriceLimit-{{event.user.user_event_pricelimit}}$</li>
+            {% endfor %}
+            </ul>
+
          </div>
        {% endfor %}
+    {% else %}
+    <div>Contact To Admin!!!</div>
     {% endif %}
     {% endif %}
       </div>

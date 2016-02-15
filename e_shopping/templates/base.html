@@ -27,36 +27,7 @@
 </head>
 
 <body>
-    <!-- Modal HTML -->
-    {% if user.is_authenticated %}
-    {% parent_student_name  request.user as child_names %}
-
-    <div id="showParentStudent" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title"><b>Welcome-{{request.user.username}},to the Cinnamonhills Gift store</b></h4>
-                </div>
-                {% if child_names%}
-                {% for child_name in child_names %}
-                <div class="modal-body">
-                    <p>{{child_name.to_person.user.username}},item-{{child_name.to_person.user.profile.product_count}},${{child_name.to_person.user.profile.product_price_limit}}</p>
-                </div>
-                {% endfor %}
-                {% else %}
-                <div>Contact To Admin</div>
-                {% endif %}
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-
-    <!-- Navigation -->
+        <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -95,13 +66,15 @@
                     <li>
                         <a href="{% url 'logout' %}">Logout</a>
                     </li>
-                    {% if request.session.to_person_name %}
+                    {% parent_student_name  request.user as child_names %}
+                    {% if child_names %}
                     <li class="dropdown">
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Welcome,{{request.user}}<span class="caret"></span></a>
                       <ul class="dropdown-menu ">
                       <li>You are Purchasing gift-</li>
-                    {% for person in request.session.to_person_name %}
-                        <li ><a href="#">{{person}}</a></li>
+                    <li ><a href="{% url 'welcome' %}"> Goto Welcome Page</a></li>
+                    {% for child_name in child_names %}
+                        <li ><a href="#">{{child_name.to_person.user.username}}</a></li>
                     {% endfor %}
                       </ul>
                     
@@ -109,10 +82,7 @@
                     {% else %}
                     <li><a href="{% url 'welcome' %}">Please select user</a></li>
                     {% endif %}
-                    <li>
-                        <a href="#showParentStudent" class="btn btn-lg " data-toggle="modal">Purchas Gifts</a>
-                    </li>
-                </ul>
+                    </ul>
             </div>
             {% else %}
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -150,18 +120,11 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="{{ STATIC_URL }}js/bootstrap.min.js" ></script>
-    
-    {% block javascript %}
 
-    <script type="text/javascript">
-    $(".purchasgift").click(function(){
-        alert("hello")
+{% block javascript %}
 
-    });
+{% endblock %}
 
-    </script>
-
-    {% endblock %}
 </body>
 
 </html>

@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load thumbnail %}
+{% load basket_total %}
 {% block content %}
+
 
         <div class="row">
 
@@ -30,16 +32,109 @@
                         </h4>
                         <p>{{product.product_description}}</p>
                     </div>
-                    <div class="text-left">
-                    <form method="POST" action=".">
-                    {% csrf_token %}
-                        <input type="hidden" id="add_basket" name="add_basket" value="{{product.id}}">
-                        <button type="submit" class="btn btn-primary">Add to Cart</button>
-                    </form>
+            <div class="text-left">
+            <form method="" action="." id="product_detail_submit">
+            {% csrf_token %}
+                <div class="checkbox">
+                  <label><input type="checkbox" id="student_event" name="student_event" value="">Select Student and Event!!!</label>
+                </div>
+                <input type="hidden" id="add_basket" name="add_basket" value="{{product.id}}">
 
-                    </div>
+                           
+                <div class="show_student_event" style="display: none;">
+                {% if user.is_authenticated %}
+                {% if request.user.profile.user_role == 'parent' %}
+
+                  {% parent_student_name  request.user as child_names %}
+
+                  {% for child_name in child_names %}
+
+                     <div class = "checkbox">
+                        <label>
+                        <input type="hidden" id="to_person_id" name="to_person_id" value="{{child_name.to_person.id}}">
+                        <input id="to_person_name" class="to_person_name" name="to_person_name" type ="checkbox" value="{{child_name.to_person.user.username}}">{{child_name.to_person.user.username|title}}</label>
+                      {% student_event child_name.to_person_id as events %}
+                        <ul>
+                        {% for event in events %}
+                          <li><input id="student_event_id" class="student_event_id" name="student_event_id" type ="checkbox" value="{{event.id}}">{{event.event_title}}-Itemcount({{event.user.user_event_count}}),
+                          PriceLimit-{{event.user.user_event_pricelimit}}$</li>
+                        {% endfor %}
+                        </ul>
+                     </div>
+
+                   {% endfor %}
+
+
+                {% else %}
+                <div>Contact To Admin!!!</div>
+                {% endif %}
+                {% endif %}
+                </div>
+        <button type="submit" class="addtocart btn btn-primary">Add to Cart</button>
+
+            </form>
+
+        </div>
 
                 </div>
             </div>
         </div>
 {% endblock content %}
+
+
+{% block javascript %}
+<script type="text/javascript">
+$( document ).ready(function() {
+$("#student_event").click(function(){
+    $('.show_student_event').removeAttr( 'style' );
+    $("#student_event").attr('checked', false);
+});
+
+    $('#product_detail_submit').submit(function() {
+        amIChecked = false;
+        $('#to_person_name').each(function() {
+            if (this.checked) {
+                amIChecked = true;
+            }
+        });
+        if (!amIChecked) {
+            alert('atleast one box is checked');
+        }
+        else{
+            var dict = {};
+            var to_person_id = [];
+            
+            $(".to_person_name").each(function(){
+                key = $(this).siblings().val();
+            if ($(this).prop('checked')==true){ 
+                var student_event_id = [];
+                $($(this).parent().siblings().find('.student_event_id')).each(function(){
+                    if ($(this).prop('checked')==true){
+                        student_event_id.push($(this).val());
+                        dict[key] = student_event_id
+                    }
+                });
+                }
+            });
+            $.ajax({
+              type: "POST",
+              url: "",
+              data: {'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value,dict},
+              dataType : "json",
+              success: function(data){
+
+                // if(data.status=='send_mail'){
+                //     $('.send_mail_successfully').show()
+                // }
+              }
+            });
+            console.log(dict)
+
+
+        }
+        return false;
+    });
+
+});
+</script>
+{% endblock %}

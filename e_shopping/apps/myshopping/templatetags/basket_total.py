@@ -2,6 +2,7 @@ from django import template
 from myshopping.models import (Category, Product, Cart, ProductImage, Order)
 from django.db.models import Sum
 from users.models import Relationship, UserProfile
+from event.models import Event
 
 register = template.Library()
 
@@ -35,3 +36,15 @@ def parent_student_name(from_user):
         childs.append(relationship)
     return childs
 
+
+@register.assignment_tag
+def student_event(student_id):
+    events = Event.objects.filter(user_id=student_id)
+    student_counts = UserProfile.objects.filter(id=student_id)
+    return events
+
+
+@register.assignment_tag
+def student_event_price_itemcount(student_id):
+    student_counts = UserProfile.objects.filter(id=student_id)
+    return student_counts

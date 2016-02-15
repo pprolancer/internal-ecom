@@ -4,7 +4,7 @@
 {% load basket_total %}
 {% csrf_token %}
 
-<div class="messages" style="margin-top: 3cm;">
+<div class="messages" >
     {% if messages %}
     {% for message in messages %}
     <div class='alert alert-{% if message.tags %}{{ message.tags }}{% endif %}'>
@@ -38,7 +38,7 @@
         </div>
         <div class="modal-body">
            <div class="checkbox">
-                <label><input type="checkbox" name="moneyorder" id="moneyorder">Money order or Check </label>
+                <label><input type="checkbox" name="moneyorder" id="moneyorder">Money Order or Check </label>
             </div>
             <div class="checkbox">
               <label><input type="checkbox" disabled="disabled"  name="creditcard" id="creditcard">Creditcard</label>
@@ -100,8 +100,8 @@
                     {% endif %}
                     </div>
                     <div class="col-sm-2">
-                        <h3><a href="" class="to_user_id_{{prt.product.id}}" id="to_user_id_{{prt.product.id}}" data-value="{{prt.to_user.user.id}}">{{prt.to_user.user.username}}</a></h3>
-                   </div>
+                        <h3><a href="" class="to_user_id_{{prt.product.id}}" id="to_user_id_{{prt.product.id}}" data-value="{{prt.to_user.id}}">{{prt.to_user.user.username|title}}</a></h3>
+                    </div>
                     <div class="col-sm-2">
                         <h3><a href="">{{prt.product}}</a></h3>
                    </div>
@@ -221,7 +221,7 @@ $( ".update_product" ).click(function() {
     var product_price = $(".product_price").text()
     var total_price = parseInt(product_price)*parseInt(quantity)
     var to_user = $("#to_user_id_"+save_later).attr('data-value')
-    
+    alert(to_user)
     $.ajax({
       type: "POST",
       url: "{% url 'update_product' %}",
@@ -243,13 +243,13 @@ $(".processd_to_checkout").click(function() {
       dataType : "json",
       success: function(data){
         console.log(data.status)
-        if(data.status=='uptoresult'){
-            $('#messages_exceed').show()
-        }
-        if(data.status=='true'){
-            
+        // if(data.status=='uptoresult'){
+        //     $('#messages_exceed').show()
+        // }
+        if(data.status==true){
+            alert("asda")
             $('#myModal').modal('show') 
-       }
+        }
 
       }
     });

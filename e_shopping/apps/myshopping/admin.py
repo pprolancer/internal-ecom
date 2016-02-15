@@ -11,19 +11,20 @@ class ProductImageInline(admin.TabularInline):
     readonly_fields = ('image_tag',)
 
 
-# class OrderAdmin(admin.ModelAdmin):
-#     list_display = ("user", "product",
-#         "item_quantity","item_price", "product_purchas_date",
-#         "order_status", "to_person")
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ("from_user", "product",
+        "item_quantity","item_price", "product_purchas_date",
+        "order_status")
 
-#     def has_add_permission(self, request, obj=None):
-#         return False
+    def has_add_permission(self, request, obj=None):
+        return False
 
-#     def to_person(self, obj):
-#         to_users = ""
-#         for usr in obj.user.from_people.all():
-#             to_users = to_users+usr.to_person.user.username+", "
-#         return to_users
+    # def to_person(self, obj):
+    #     import pdb;pdb.set_trace()
+    #     to_users = ""
+    #     for usr in obj.user.from_people.all():
+    #         to_users = to_users+usr.to_person.user.username+", "
+    #     return to_users
 
 
 class ProductAdmin(admin.ModelAdmin):
@@ -33,21 +34,16 @@ class ProductAdmin(admin.ModelAdmin):
     ]
 
 
-# class CartAdmin(admin.ModelAdmin):
-#     list_display = ("user","product","creation_date","quantity","price")
+class CartAdmin(admin.ModelAdmin):
+    list_display = ("from_user","product","creation_date","quantity","price")
 
-#     def has_add_permission(self, request, obj=None):
-#         return False
-
-# admin.site.register(Category)
-# admin.site.register(Product, ProductAdmin)
-# admin.site.register(Cart, CartAdmin)
-# admin.site.register(ProductImage)
-# admin.site.register(Order, OrderAdmin)
+    def has_add_permission(self, request, obj=None):
+        return False
 
 admin.site.register(Category)
 admin.site.register(Product, ProductAdmin)
-admin.site.register(Cart)
+admin.site.register(Cart, CartAdmin)
 admin.site.register(ProductImage)
-admin.site.register(Order)
+admin.site.register(Order, OrderAdmin)
+
 

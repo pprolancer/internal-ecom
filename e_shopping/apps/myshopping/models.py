@@ -68,9 +68,8 @@ class Cart(models.Model):
     def add(self,from_user,to_users,product,price,quantity):
         try:
             for to_user in to_users:
-                to_user_card = UserProfile.objects.get(user=to_user)
                 cart, created = Cart.objects.get_or_create(from_user=from_user,
-                    product=product,price=price, quantity= quantity,to_user=to_user_card)
+                    product=product,price=price, quantity= quantity,to_user=to_user)
                 cart.save()
         except:
             pass
