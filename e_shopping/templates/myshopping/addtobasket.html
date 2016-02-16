@@ -74,7 +74,8 @@
         <div class="basket-title hidden-xs">
             <div class="row">
                 <h2 class="col-sm-2 h3">Gift Image</h2>
-                <p class="col-sm-2 h3">Student Name</p>
+                <p class="col-sm-1 h3">Student Name</p>
+                <p class="col-sm-1 h3">Occasion</p>
                 <p class="col-sm-2 h3">Gift Name</p>
                 <p class="col-sm-2 h3">Quantity</p>
                 <p class="col-sm-2 h3 align-right">Price</p>
@@ -99,12 +100,18 @@
                     <img src="http://placehold.it/320x150" alt="" width="50" height="50">
                     {% endif %}
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-1">
                         <h3><a href="" class="to_user_id_{{prt.product.id}}" id="to_user_id_{{prt.product.id}}" data-value="{{prt.to_user.id}}">{{prt.to_user.user.username|title}}</a></h3>
                     </div>
+
+                    <div class="col-sm-1">
+                        <h3><a href="">{{prt.event.event_title}}</a></h3>
+                   </div>
                     <div class="col-sm-2">
                         <h3><a href="">{{prt.product}}</a></h3>
                    </div>
+
+                   
                     <div class="col-sm-3">
                         <div class="checkout-quantity">
                             <div class="input-group  ">
@@ -242,12 +249,8 @@ $(".processd_to_checkout").click(function() {
       data: {'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
       dataType : "json",
       success: function(data){
-        console.log(data.status)
-        // if(data.status=='uptoresult'){
-        //     $('#messages_exceed').show()
-        // }
+
         if(data.status==true){
-            alert("asda")
             $('#myModal').modal('show') 
         }
 

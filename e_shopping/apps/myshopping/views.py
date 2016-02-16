@@ -64,27 +64,32 @@ class ProductDetailView(View):
         try:
             product_id = request.POST.get('add_basket','')
             to_user = request.POST.getlist('to_person_id','')
-            # student_event_id = request.POST.getlist('student_event_id','')
-
+            student_event_ids = request.POST.getlist('student_event_id','')
+            insert_student_event = EventGiftCondition()
+            insert_student_event.add(request.user.profile,student_event_ids)
             products = Product.objects.filter(id=product_id)
-            to_user_profile = UserProfile.objects.filter(id__in=to_user)
-            all_cart = Cart.objects.filter(from_user=request.user.profile,
-                to_user_id__in=to_user_profile)
+            event_id = []
+            student_id = []
+            for student_event_id in student_event_ids:
+                event_id.append(student_event_id[0])
+                student_id.append(student_event_id[2])
 
+            all_cart = Cart.objects.filter(from_user=request.user.profile,
+                to_user_id__in=student_id)
             cart_add = Cart() 
             quantity = "1"
             cart =  Cart.objects.filter(product_id=product_id,
-                    from_user=request.user.profile,to_user_id__in=to_user_profile)
+                from_user=request.user.profile,to_user_id__in=student_id,event_id__in=event_id)
             if not cart:
-                cart_add.add(request.user.profile,to_user_profile,products[0],products[0].product_price,quantity)
+                cart_add.add(request.user.profile,student_event_ids
+                    ,products[0],products[0].product_price,
+                    quantity)
 
             ctx = {'products':all_cart}
+
             return redirect(reverse('add_to_basket'))
         except KeyError:
             return redirect(reverse('user-login'))
-
-
-
 
 class RemoveFromCartView(View):
 
@@ -129,9 +134,12 @@ class ProcessdCheckout(View):
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        # profile_user = UserProfile.objects.get(user_id=request.user)
-        # user_quantity = Cart.objects.filter(user_id=profile_user).aggregate(total=Sum('quantity'))
-        # user_price = Cart.objects.filter(user_id=profile_user).aggregate(total=Sum('price'))
+
+
+
+        # profile_user = EventGiftCondition.objects.get(from_user=request.user.profile)
+        # user_quantity = Cart.objects.filter(from_user=request.user.profile).aggregate(total=Sum('quantity'))
+        # user_price = Cart.objects.filter(from_user=request.user.profile).aggregate(total=Sum('price'))
         # if (user_quantity['total'] <= profile_user.product_count) and (user_price['total']<= profile_user.product_price_limit):
         #     cart_remove = Cart.objects.filter(user_id=profile_user)
         #     for i in cart_remove:

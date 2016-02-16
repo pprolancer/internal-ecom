@@ -20,7 +20,6 @@ class OrderAdmin(admin.ModelAdmin):
         return False
 
     # def to_person(self, obj):
-    #     import pdb;pdb.set_trace()
     #     to_users = ""
     #     for usr in obj.user.from_people.all():
     #         to_users = to_users+usr.to_person.user.username+", "

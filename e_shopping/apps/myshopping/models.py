@@ -8,6 +8,7 @@ import uuid
 import os
 from decimal import Decimal
 from users.models import UserProfile
+from event.models import Event
 # Create your models here.
 
 ORDER_STATUS = (
@@ -60,16 +61,20 @@ class Cart(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True, blank=True)
     quantity = models.IntegerField("Quantity", default=0)
     price = models.DecimalField(max_digits=8, decimal_places=2)
+    event = models.ForeignKey(Event,related_name="cart_event",blank=True,null=True)
 
     class Meta:
         verbose_name = 'cart'
         verbose_name_plural = 'carts'
 
-    def add(self,from_user,to_users,product,price,quantity):
+    # def add(self,from_user,to_users,product,price,quantity,events):
+    def add(self,from_user,student_event_ids,product,price,quantity):
         try:
-            for to_user in to_users:
+            for to_user in student_event_ids:
+                student = UserProfile.objects.get(id=to_user[2])
+                event = Event.objects.get(id=to_user[0])
                 cart, created = Cart.objects.get_or_create(from_user=from_user,
-                    product=product,price=price, quantity= quantity,to_user=to_user)
+                    product=product,price=price, quantity= quantity,to_user=student,event=event)
                 cart.save()
         except:
             pass
@@ -100,6 +105,7 @@ class Order(models.Model):
     item_price = models.DecimalField(max_digits=8, decimal_places=2)#default=Decimal(0.0)
     order_status = models.CharField(
         "User Order Status", max_length=50, choices=ORDER_STATUS)
+    event = models.ForeignKey(Event,related_name="order_event",blank=True,null=True)
 
     class Meta:
         verbose_name = "Orders"

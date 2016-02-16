@@ -47,13 +47,16 @@ class EventGiftCondition(models.Model):
             verbose_name = "EventGift"
             verbose_name_plural = "EventGifts"
 
-    def add(self,from_user,to_users,event):
+    def add(self,from_user,student_events):
         try:
-            for to_user in to_users:
-                cart, created = Cart.objects.get_or_create(from_user=from_user,
-                    product=product,price=price, quantity= quantity,to_user=to_user)
-                cart.save()
+            for student_event_id in student_events:
+                student = UserProfile.objects.get(id=student_event_id[2])
+                event = Event.objects.get(id=student_event_id[0])
+                event, created = EventGiftCondition.objects.get_or_create(from_user=from_user,
+                    to_user=student,event=event)
+                event.save()
         except:
             pass
         return True
+
     
