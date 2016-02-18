@@ -2,7 +2,7 @@
 {% block content %}
 {% load thumbnail %}
 {% load basket_total %}
-{% csrf_token %}
+
 
 <div class="messages" >
     {% if messages %}
@@ -24,7 +24,7 @@
         <li class="active">Basket</li>
     </ul>
     <div class="page-header action">
-    <h1>Basket</h1>
+        <h1>Basket</h1>
     </div>
 
  <div class="modal fade" id="myModal" role="dialog">
@@ -56,10 +56,20 @@
 <div id="messages_exceed" style="display: none">
    <div class="alert alert-danger  fade in">
             <a class="messages_exceed_close" data-dismiss="alert" href="#">×</a>
-            <div class="alertinner wicon">You have reach upto limit
-                        <i class="icon-exclamation-sign"></i>
+            <div class="alertinner wicon">{{request.user|title}}!!!You have reach upto limit
+            <i class="icon-exclamation-sign"></i>
             </div>
         </div>
+</div>
+
+<div id="messages_student_limit_exceed" style="display: none">
+   <div class="alert alert-danger  fade in">
+        <a class="messages_student_limit_exceed_close" data-dismiss="alert" href="#">×
+        </a>
+        <div class="alertinner wicon">Student Limit Reach upto limit
+                    <i class="icon-exclamation-sign"></i>
+        </div>
+    </div>
 </div>
 
 <div class="alert alert-success fade in send_mail_successfully" style="display: none">
@@ -78,17 +88,21 @@
                 <p class="col-sm-1 h3">Occasion</p>
                 <p class="col-sm-2 h3">Gift Name</p>
                 <p class="col-sm-2 h3">Quantity</p>
-                <p class="col-sm-2 h3 align-right">Price</p>
-                <p class="col-sm-2 h3 align-right">Total</p>
+                <p class="col-sm-1 h3 align-right">Price</p>
+                <p class="col-sm-1 h3 align-right">Total</p>
+                <p class="col-sm-1 h3 align-right">Remove Item</p>
             </div>
         </div>
         <form action="." method="post" class="basket_summary" id="basket_formset">
-           
+           {% csrf_token %}
             <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="1"><input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="1"><input id="id_form-MIN_NUM_FORMS" name="form-MIN_NUM_FORMS" type="hidden" value="0"><input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="1000">
+
             {% for prt in products %}
+
             <div class="basket-items" id="product_{{prt.id}}">
                 <div class="row" >
                     <div class="col-sm-2">
+                        <input type="hidden" id="studentevent" class="studentevent" value="{{prt.event.id}}-{{prt.to_user.id}}">
                         <input id="id_form-0-id" name="form-0-id" type="hidden" value="2873">
                         {% if prt.product.product_image %}
 
@@ -106,13 +120,13 @@
 
                     <div class="col-sm-1">
                         <h3><a href="">{{prt.event.event_title}}</a></h3>
-                   </div>
+                    </div>
                     <div class="col-sm-2">
                         <h3><a href="">{{prt.product}}</a></h3>
-                   </div>
+                    </div>
 
                    
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="checkout-quantity">
                             <div class="input-group  ">
                                 <input class="form-control" 
@@ -122,34 +136,33 @@
                             </span>
                             </div>
                         </div>
-                            <div>
-                                <a href="#" data-id="0" data-behaviours="remove" class="inline remove_from_cart" data-value="{{prt.product.id}}">Remove <input type="hidden" id="cart_id" value="{{prt.id}}"></a>
-                               
-                                <div style="display:none">
-                                    <input id="id_form-0-save_for_later" name="form-0-save_for_later" type="checkbox">
-                                    <input id="id_form-0-DELETE" name="form-0-DELETE" type="checkbox">
-                                </div>
-                                
+                        <div>
+                            <div style="display:none">
+                                <input id="id_form-0-save_for_later" name="form-0-save_for_later" type="checkbox">
+                                <input id="id_form-0-DELETE" name="form-0-DELETE" type="checkbox">
                             </div>
-
+                        </div>
                     </div>
                     <div class="col-sm-1">
                     <p class="price_color align-right product_price" value="{{product.product_price}}">{{prt.price}}
                     </p>
                     </div>
+                    <div class="col-sm-1">
+                        {% quantity_price_total  prt as to_pr %}
+                        <p class="price_color align-right product_total">{{to_pr}}
+                        </p>
+                    </div>
                     <div class="col-sm-2">
-                    {% quantity_price_total  prt as to_pr %}
-                    <p class="price_color align-right product_total">{{to_pr}}
-                    </p>
+                    <a href="#" data-id="0" data-behaviours="remove" class="glyphicon glyphicon-remove inline remove_from_cart" data-value="{{prt.product.id}}"><input type="hidden" id="cart_id" value="{{prt.id}}"></a>
                     </div>
                 </div>
             </div>
             {% endfor %}
-        </form>
-    <div class="row">
+
+<div class="row">
     <div class="col-sm-6">
         <div id="voucher_form_container" style="display:none">
-            <form id="voucher_form" action="" method="post">
+        <form id="voucher_form" action="" method="post">
             
         <div class="form-group">
             <label for="id_code" class=" control-label required">
@@ -161,19 +174,13 @@
         </div>
         <button type="submit" class="btn btn-info" data-loading-text="Adding...">Add voucher</button>
         or <a href="#" id="voucher_form_cancel">cancel</a>
-    </form>
+        </form>
         </div>
     </div>
-    <div class="col-sm-6">
-        <div class="sub-header">
-            <h2>Totals</h2>
-    </div>
+</div>
 <div id="basket_totals">
     <table class="table table-condensed">
         <tbody>
-            <tr>
-                <th colspan="2"><h3>Basket</h3></th>
-            </tr>
             <tr>
                 <th class="total">Basket total</th>
                 {% basket_total  products as total %}
@@ -194,6 +201,7 @@
     </div>
 </div>
 {% endif %}
+</form>
 </div>
 </div>
 
@@ -228,7 +236,7 @@ $( ".update_product" ).click(function() {
     var product_price = $(".product_price").text()
     var total_price = parseInt(product_price)*parseInt(quantity)
     var to_user = $("#to_user_id_"+save_later).attr('data-value')
-    alert(to_user)
+
     $.ajax({
       type: "POST",
       url: "{% url 'update_product' %}",
@@ -241,17 +249,31 @@ $( ".update_product" ).click(function() {
 });
 
 
-
 $(".processd_to_checkout").click(function() {
+    var studentevent_id = [];
+    $(".studentevent").each(function(){
+        studentevent_id.push($(this).val())
+    });
     $.ajax({
       type: "POST",
       url: "{% url 'processd_to_checkout' %}",
-      data: {'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
+      data: {'studentevent_id':studentevent_id,'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
       dataType : "json",
       success: function(data){
 
+        console.log(data.status)
+
         if(data.status==true){
             $('#myModal').modal('show') 
+        }
+        
+        if(data.status="exceed"){
+            $('#messages_exceed').show()
+        }
+
+        
+        if(data.status="student_limit_exceed"){
+            $('#messages_student_limit_exceed').show()
         }
 
       }
@@ -263,6 +285,7 @@ $('.messages_exceed_close').click(function(){
 });
 
 $('.paymentsubmit').click(function(){
+
     if ($('#moneyorder').is(':checked')){
         $.ajax({
               type: "POST",

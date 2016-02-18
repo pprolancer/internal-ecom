@@ -42,6 +42,7 @@ class EventGiftCondition(models.Model):
     to_user = models.ForeignKey(UserProfile,
         related_name="to_userevent", blank=True, null=True)
     event = models.ForeignKey(Event,related_name="event",blank=True,null=True)
+    
 
     class Meta:
             verbose_name = "EventGift"
@@ -50,13 +51,12 @@ class EventGiftCondition(models.Model):
     def add(self,from_user,student_events):
         try:
             for student_event_id in student_events:
-                student = UserProfile.objects.get(id=student_event_id[2])
+                student = UserProfile.objects.filter(pk=student_event_id[2])
                 event = Event.objects.get(id=student_event_id[0])
                 event, created = EventGiftCondition.objects.get_or_create(from_user=from_user,
                     to_user=student,event=event)
                 event.save()
+
         except:
             pass
         return True
-
-    

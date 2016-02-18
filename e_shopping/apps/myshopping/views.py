@@ -70,14 +70,18 @@ class ProductDetailView(View):
             products = Product.objects.filter(id=product_id)
             event_id = []
             student_id = []
-            for student_event_id in student_event_ids:
+
+            for student_event in student_event_ids:
+                student_event_id = student_event.split(",")
                 event_id.append(student_event_id[0])
-                student_id.append(student_event_id[2])
+                student_id.append(student_event_id[1])
 
             all_cart = Cart.objects.filter(from_user=request.user.profile,
-                to_user_id__in=student_id)
+                to_user_id__in=student_id,event_id__in=event_id)
+
             cart_add = Cart() 
             quantity = "1"
+
             cart =  Cart.objects.filter(product_id=product_id,
                 from_user=request.user.profile,to_user_id__in=student_id,event_id__in=event_id)
             if not cart:
@@ -130,30 +134,52 @@ class UpdateCartView(View):
             json.dumps({'status': True,'product_id':product_id}), 
             content_type="application/json")
 
+
 class ProcessdCheckout(View):
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
+        
+        studentevent_ids = request.POST.getlist('studentevent_id[]','')
+        student_ids = []
+        event_ids = []
+        for studentevent_id in studentevent_ids:
+            event_ids.append(studentevent_id[0])
+            student_ids.append(studentevent_id[2])
+        
+        for studentevent_id in studentevent_ids:
 
+            current_login_user = UserProfile.objects.get(user_id=request.user)
+            if (current_login_user.product_count!=0) or (current_login_user.product_price_limit!=0):
+                student_current_count = EventGiftCondition.objects.filter(from_user=request.user.profile,
+                to_user_id=studentevent_id[2],event_id=studentevent_id[0])
 
+                student_count_userprofile = UserProfile.objects.get(id=studentevent_id[2])
+                if student_current_count.count() <= student_count_userprofile.product_count:
 
-        # profile_user = EventGiftCondition.objects.get(from_user=request.user.profile)
-        # user_quantity = Cart.objects.filter(from_user=request.user.profile).aggregate(total=Sum('quantity'))
-        # user_price = Cart.objects.filter(from_user=request.user.profile).aggregate(total=Sum('price'))
-        # if (user_quantity['total'] <= profile_user.product_count) and (user_price['total']<= profile_user.product_price_limit):
-        #     cart_remove = Cart.objects.filter(user_id=profile_user)
-        #     for i in cart_remove:
-        #         order , created = Order.objects.get_or_create(user=profile_user,
-        #             product_id=i.product_id,item_quantity=i.quantity,item_price=i.price,order_status='Pending')
-        #         order.save()
-        #         cart_delete = Cart.objects.filter(user_id=profile_user,product_id=i.product_id)
-        #         cart_delete.delete()
+                    cart_remove = Cart.objects.filter(from_user=request.user.profile,
+                        to_user_id=studentevent_id[2],event_id=studentevent_id[0])
+                    for i in cart_remove:
+                        order , created = Order.objects.get_or_create(from_user=request.user.profile,
+                            to_user_id=studentevent_id[2],event_id=studentevent_id[0],
+                            product_id=i.product_id,item_quantity=i.quantity,
+                            item_price=i.price,order_status='Pending')
+                        order.save()
+
+                        cart_delete = Cart.objects.filter(from_user=request.user.profile,
+                        to_user_id=studentevent_id[2],event_id=studentevent_id[0],product_id=i.product_id)
+                        cart_delete.delete()
+                else:
+                    return HttpResponse(
+                        json.dumps({'status': 'student_limit_exceed'}), content_type="application/json")
+
+            else:
+                return HttpResponse(
+                    json.dumps({'status': 'exceed'}), content_type="application/json")
+                
 
         return HttpResponse(
-                    json.dumps({'status': True}), content_type="application/json")
-        # else:
-        #     return HttpResponse(
-        # json.dumps({'status': 'uptoresult'}), content_type="application/json")
+                    json.dumps({'status': True}), content_type="application/json")                               
 
 
 class CheckoutList(View):
@@ -183,6 +209,7 @@ class AddToCartView(View):
 class SendMailToAdmin(View):
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
+        import pdb;pdb.set_trace()
         user_profile = UserProfile.objects.get(user_id=request.user)
         orders = Order.objects.filter(user_id=user_profile)
         subject = "Cinnemohills Online shopping"

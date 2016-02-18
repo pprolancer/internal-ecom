@@ -12,7 +12,8 @@ from django.conf import settings
 from users.forms import RegistrationForm
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-
+from users.models import UserProfile
+from django.contrib import messages
 # Create your views here.
 
 class RegisterView(View):
@@ -54,8 +55,12 @@ class LoginView(View):
 
         if form.is_valid():
             user = form.get_user()
-            auth_login(request, user)
-            return HttpResponseRedirect(self.get_success_url())
+            user_role = UserProfile.objects.get(user_id=user.id)
+            if user_role.user_role!='student':
+                auth_login(request, user)
+                return HttpResponseRedirect(self.get_success_url())
+            else:
+                messages.warning(request, 'Student Login are Not Allowed!!!')
         ctx = {"form": form}
         return render(request, "registration/login.html", ctx)
 

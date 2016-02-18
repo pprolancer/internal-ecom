@@ -13,7 +13,6 @@ USER_TYPES = (
 class UserProfile(models.Model):
 
     user = models.OneToOneField(User,related_name='profile')
-    # event = models.ForeignKey(Event, related_name="user_event", blank=True, null=True)
     user_role = models.CharField(
         "User Role", max_length=50, choices=USER_TYPES)
     product_count = models.IntegerField(default=0)
@@ -36,41 +35,6 @@ class UserProfile(models.Model):
     def user_event_pricelimit(self):
         user_event_pricelimit = UserProfile.objects.get(id=self.id).product_price_limit
         return user_event_pricelimit
-
-
-    # def get_personal_gift_count(self):
-    #     # get all order for this user with his parent where order type is personal
-    #     #calculate order number 
-    #     # substarct from product_count with order count 
-    #     # return result
-
-    # def get_holiday_gift_count(self):
-    #     # get all order for this user with his parent where order type is holiday
-    #     #calculate order number 
-    #     # substarct from product_count with order count 
-    #     # return result
-
-
-    # def get_personal_gift_price(self):
-    #     # get all order for this user with his parent where order type is personal
-    #     #calculate all order prices  
-    #     # substarct from product_price_limit with total order price
-    #     # return result
-
-    # def get_holiday_gift_count(self):
-    #     # get all order for this user with his parent where order type is holiday
-    #     #calculate all order prices  
-    #     # substarct from product_price_limit with total order price
-    #     # return result
-
-    # def get_child(self):
-    #     user_child_exist = Relationship.objects.filter(from_person=self)
-    #     # import pdb; pdb.set_trace()
-    #     if user_child_exist:
-    #         return self.to_people.all()
-    #     else:
-    #         return "No Childs for user available"
-
 
 class Relationship(models.Model):
     from_person = models.ForeignKey(UserProfile, related_name='from_people')

@@ -7,10 +7,10 @@
    <div class = "form-group">
       <div class = "col-sm-offset-2 col-sm-10">
     {% if user.is_authenticated %}
-    {% if request.user.profile.user_role == 'parent' %}
 
-      <strong>Welcome, </strong>{{request.user.username}},to the Cinnamonhills Gift store
-      {% parent_student_name  request.user as child_names %}
+    <strong>Welcome, </strong>{{request.user.username}},to the Cinnamonhills Gift store
+    {% parent_student_name  request.user as child_names %}
+      {% if child_names %}
       {% for child_name in child_names %}
 
          <div>
