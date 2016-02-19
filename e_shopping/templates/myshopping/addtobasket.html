@@ -102,7 +102,7 @@
             <div class="basket-items" id="product_{{prt.id}}">
                 <div class="row" >
                     <div class="col-sm-2">
-                        <input type="hidden" id="studentevent" class="studentevent" value="{{prt.event.id}}-{{prt.to_user.id}}">
+                        <input type="hidden" id="studentevent" class="studentevent" value="{{prt.event.id}}-{{prt.to_user.id}}-{{prt.quantity}}-{{prt.price}}">
                         <input id="id_form-0-id" name="form-0-id" type="hidden" value="2873">
                         {% if prt.product.product_image %}
 
@@ -122,7 +122,7 @@
                         <h3><a href="">{{prt.event.event_title}}</a></h3>
                     </div>
                     <div class="col-sm-2">
-                        <h3><a href="">{{prt.product}}</a></h3>
+                        <h3><a href="">{{prt.proudct}}</a></h3>
                     </div>
 
                    

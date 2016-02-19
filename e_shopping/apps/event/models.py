@@ -42,21 +42,25 @@ class EventGiftCondition(models.Model):
     to_user = models.ForeignKey(UserProfile,
         related_name="to_userevent", blank=True, null=True)
     event = models.ForeignKey(Event,related_name="event",blank=True,null=True)
-    
+    item_price = models.DecimalField(max_digits=8, decimal_places=2)
+    product_count = models.CharField(max_length=255, blank=True, null=True)
+
 
     class Meta:
             verbose_name = "EventGift"
             verbose_name_plural = "EventGifts"
 
+
     def add(self,from_user,student_events):
         try:
-            for student_event_id in student_events:
-                student = UserProfile.objects.filter(pk=student_event_id[2])
+            for student_event in student_events:
+                student_event_id = student_event.split(",")
+                student = UserProfile.objects.get(id=student_event_id[1])
                 event = Event.objects.get(id=student_event_id[0])
-                event, created = EventGiftCondition.objects.get_or_create(from_user=from_user,
-                    to_user=student,event=event)
-                event.save()
 
+                event, created = EventGiftCondition.objects.get_or_create(from_user=from_user,
+                    to_user=student,event=event,item_price=student_event_id[2],product_count=1)
+                event.save()
         except:
             pass
         return True

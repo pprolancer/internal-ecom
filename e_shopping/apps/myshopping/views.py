@@ -27,8 +27,6 @@ class IndexView(View):
 
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
-
-        # request.user.profile.get_child()
         return render(request, "index.html", {})
 
     def post(self, request, *args, **kwargs):
@@ -66,6 +64,7 @@ class ProductDetailView(View):
             to_user = request.POST.getlist('to_person_id','')
             student_event_ids = request.POST.getlist('student_event_id','')
             insert_student_event = EventGiftCondition()
+
             insert_student_event.add(request.user.profile,student_event_ids)
             products = Product.objects.filter(id=product_id)
             event_id = []
@@ -83,7 +82,8 @@ class ProductDetailView(View):
             quantity = "1"
 
             cart =  Cart.objects.filter(product_id=product_id,
-                from_user=request.user.profile,to_user_id__in=student_id,event_id__in=event_id)
+                from_user=request.user.profile,to_user_id__in=student_id,
+                event_id__in=event_id)
             if not cart:
                 cart_add.add(request.user.profile,student_event_ids
                     ,products[0],products[0].product_price,
@@ -143,32 +143,46 @@ class ProcessdCheckout(View):
         studentevent_ids = request.POST.getlist('studentevent_id[]','')
         student_ids = []
         event_ids = []
-        for studentevent_id in studentevent_ids:
+        for student_event in studentevent_ids:
+            studentevent_id = student_event.split("-")
             event_ids.append(studentevent_id[0])
-            student_ids.append(studentevent_id[2])
+            student_ids.append(studentevent_id[1])
         
-        for studentevent_id in studentevent_ids:
-
+        for student_event in studentevent_ids:
+            studentevent_id = student_event.split("-")
             current_login_user = UserProfile.objects.get(user_id=request.user)
-            if (current_login_user.product_count!=0) or (current_login_user.product_price_limit!=0):
-                student_current_count = EventGiftCondition.objects.filter(from_user=request.user.profile,
-                to_user_id=studentevent_id[2],event_id=studentevent_id[0])
 
-                student_count_userprofile = UserProfile.objects.get(id=studentevent_id[2])
-                if student_current_count.count() <= student_count_userprofile.product_count:
+            if (current_login_user.product_count!=0) or (current_login_user.product_price_limit!=0):
+                print("hello")
+                student_current_count = EventGiftCondition.objects.filter(from_user=request.user.profile,
+                to_user_id=studentevent_id[1],event_id=studentevent_id[0])
+                
+                student_count_userprofile = UserProfile.objects.get(id=studentevent_id[1])
+
+                updated_count = student_count_userprofile.product_count- int(studentevent_id[2])
+                updated_price = student_count_userprofile.product_price_limit - float(studentevent_id[3])
+                # if updated_count:
+                # import pdb;pdb.set_trace()
+                if (student_current_count.count() <= student_count_userprofile.product_count) and (int(student_current_count[0].item_price) <= updated_price):
 
                     cart_remove = Cart.objects.filter(from_user=request.user.profile,
-                        to_user_id=studentevent_id[2],event_id=studentevent_id[0])
+                        to_user_id=studentevent_id[1],event_id=studentevent_id[0])
+
                     for i in cart_remove:
                         order , created = Order.objects.get_or_create(from_user=request.user.profile,
-                            to_user_id=studentevent_id[2],event_id=studentevent_id[0],
+                            to_user_id=studentevent_id[1],event_id=studentevent_id[0],
                             product_id=i.product_id,item_quantity=i.quantity,
                             item_price=i.price,order_status='Pending')
                         order.save()
 
+                        update_userprofile = UserProfile.objects.filter(id=studentevent_id[1]).update(product_count=updated_count,
+                            product_price_limit = updated_price)
+
                         cart_delete = Cart.objects.filter(from_user=request.user.profile,
-                        to_user_id=studentevent_id[2],event_id=studentevent_id[0],product_id=i.product_id)
+                        to_user_id=studentevent_id[1],event_id=studentevent_id[0],product_id=i.product_id)
                         cart_delete.delete()
+
+
                 else:
                     return HttpResponse(
                         json.dumps({'status': 'student_limit_exceed'}), content_type="application/json")
@@ -209,7 +223,7 @@ class AddToCartView(View):
 class SendMailToAdmin(View):
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
         user_profile = UserProfile.objects.get(user_id=request.user)
         orders = Order.objects.filter(user_id=user_profile)
         subject = "Cinnemohills Online shopping"

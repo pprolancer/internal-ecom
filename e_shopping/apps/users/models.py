@@ -28,14 +28,6 @@ class UserProfile(models.Model):
     def __str__(self):
         return '{0} - {1}'.format(self.user.username, self.user_role)
 
-    def user_event_count(self):
-        user_event_count = UserProfile.objects.get(id=self.id).product_count
-        return user_event_count
-
-    def user_event_pricelimit(self):
-        user_event_pricelimit = UserProfile.objects.get(id=self.id).product_price_limit
-        return user_event_pricelimit
-
 class Relationship(models.Model):
     from_person = models.ForeignKey(UserProfile, related_name='from_people')
     to_person = models.ForeignKey(UserProfile, related_name='to_people')

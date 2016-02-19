@@ -4,77 +4,85 @@
 {% block content %}
 
 
-        <div class="row">
+<div class="row">
 
-            <div class="col-md-3">
-                <p class="lead">Shop Name</p>
-                <div class="list-group">
-                {% for category in categories %}
-                    <a href="#" class="list-group-item">{{category.title}}</a>
+    <div class="col-md-3">
+        <p class="lead">Shop Name</p>
+        <div class="list-group">
+        {% for category in categories %}
+            <a href="#" class="list-group-item">{{category.title}}</a>
+        {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <div class="thumbnail">
+            {% if product.product_image %}
+
+                {% thumbnail product.product_image.image "100x100" crop="center" as im %}
+                <img src="{{im.url}}" width="{{im.width}}" height="{{ im.height }}">
+                {% endthumbnail %}
+
+            {% else %}
+            <img src="http://placehold.it/320x150" alt="">
+            {% endif %}
+            <div class="caption-full">
+                <h4 class="pull-right">${{product.product_price}}</h4>
+                <h4><a href="#">{{product.product_name}}</a>
+                </h4>
+                <p>{{product.product_description}}</p>
+            </div>
+    <div class="text-left">
+    <form action="." method="post" id="student_event_form">
+    {% csrf_token %}
+        <div class="checkbox">
+          <label><input type="checkbox" id="student_event" name="student_event" value="">Select Student and Event!!!</label>
+        </div>
+        <input type="hidden" id="add_basket" name="add_basket" value="{{product.id}}">
+
+                   
+        <div class="show_student_event" style="display: none;">
+        {% if user.is_authenticated %}
+        {% if request.user.profile.user_role == 'parent' %}
+
+        {% parent_student_name  request.user as child_names %}
+
+            {% for child_name in child_names %}
+
+            <div class = "checkbox">
+                <label>
+                <input type="hidden" id="to_person_id" name="to_person_id" value="{{child_name.to_person.id}}" >
+                <input id="to_person_name" class="to_person_name" name="to_person_name" type ="checkbox" value="{{child_name.to_person.user.username}}">{{child_name.to_person.user.username|title}}</label>
+              {% student_event child_name.to_person_id  as events %}
+                <ul>
+                {% for event in events %}
+                  <li><input id="student_event_id" class="student_event_id" name="student_event_id" type ="checkbox" value="{{event.id}},{{child_name.to_person.id}},{{product.product_price}}">{{event.event_title}}</li>
+
+                {% current_user_event_count request.user.id child_name.to_person_id event.id as count  %}
+                Itemcount({{count}}),
+
+                {% current_user_event_pricelimit request.user.id child_name.to_person_id event.id as pricelimit  %}
+
+                PriceLimit-{{pricelimit}}$
+                
+
                 {% endfor %}
-                </div>
+                </ul>
             </div>
+            {% endfor %}
+        {% else %}
+        <div>Contact To Admin!!!</div>
+        {% endif %}
+        {% endif %}
+        </div>
+<button type="submit"  class="addtocart btn btn-primary">Add to Cart</button>
+</form>
 
-            <div class="col-md-9">
-                <div class="thumbnail">
-                    {% if product.product_image %}
-
-                        {% thumbnail product.product_image.image "100x100" crop="center" as im %}
-                        <img src="{{im.url}}" width="{{im.width}}" height="{{ im.height }}">
-                        {% endthumbnail %}
-
-                    {% else %}
-                    <img src="http://placehold.it/320x150" alt="">
-                    {% endif %}
-                    <div class="caption-full">
-                        <h4 class="pull-right">${{product.product_price}}</h4>
-                        <h4><a href="#">{{product.product_name}}</a>
-                        </h4>
-                        <p>{{product.product_description}}</p>
-                    </div>
-            <div class="text-left">
-            <form action="." method="post" id="student_event_form">
-            {% csrf_token %}
-                <div class="checkbox">
-                  <label><input type="checkbox" id="student_event" name="student_event" value="">Select Student and Event!!!</label>
-                </div>
-                <input type="hidden" id="add_basket" name="add_basket" value="{{product.id}}">
-
-                           
-                <div class="show_student_event" style="display: none;">
-                {% if user.is_authenticated %}
-                {% if request.user.profile.user_role == 'parent' %}
-
-                {% parent_student_name  request.user as child_names %}
-
-                    {% for child_name in child_names %}
-
-                    <div class = "checkbox">
-                        <label>
-                        <input type="hidden" id="to_person_id" name="to_person_id" value="{{child_name.to_person.id}}">
-                        <input id="to_person_name" class="to_person_name" name="to_person_name" type ="checkbox" value="{{child_name.to_person.user.username}}">{{child_name.to_person.user.username|title}}</label>
-                      {% student_event child_name.to_person_id as events %}
-                        <ul>
-                        {% for event in events %}
-                          <li><input id="student_event_id" class="student_event_id" name="student_event_id" type ="checkbox" value="{{event.id}},{{child_name.to_person.id}}">{{event.event_title}}-Itemcount({{event.user.user_event_count}}),
-                          PriceLimit-{{event.user.user_event_pricelimit}}$</li>
-                        {% endfor %}
-                        </ul>
-                    </div>
-                    {% endfor %}
-                {% else %}
-                <div>Contact To Admin!!!</div>
-                {% endif %}
-                {% endif %}
-                </div>
-        <button type="submit"  class="addtocart btn btn-primary">Add to Cart</button>
-        </form>
+</div>
 
         </div>
-
-                </div>
-            </div>
-        </div>
+    </div>
+</div>
 {% endblock content %}
 
 

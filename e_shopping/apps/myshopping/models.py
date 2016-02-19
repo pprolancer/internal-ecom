@@ -111,3 +111,16 @@ class Order(models.Model):
         verbose_name = "Orders"
         verbose_name_plural = "Orders"
 
+    # def add(self,from_user,student_event_ids,product,price,quantity):
+    #     try:
+    #         for student_event in student_event_ids:
+    #             to_user = student_event.split(",")
+    #             event = Event.objects.get(id=to_user[0])
+    #             student = UserProfile.objects.get(id=to_user[1])
+    #             cart, created = Cart.objects.get_or_create(from_user=from_user,
+    #                 product=product,price=price, quantity= quantity,to_user=student,event=event)
+    #             cart.save()
+    #     except:
+    #         pass
+    #     return True
+

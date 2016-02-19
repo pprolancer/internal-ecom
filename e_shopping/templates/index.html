@@ -20,8 +20,14 @@
             {% student_event child_name.to_person_id as events %}
             <ul>
             {% for event in events %}
-              <li>{{event.event_title}}-Itemcount({{event.user.user_event_count}}),
-              PriceLimit-{{event.user.user_event_pricelimit}}$</li>
+              <li>{{event.event_title}}</li>
+              
+              {% current_user_event_count request.user.id child_name.to_person_id event.id as count  %}
+              Itemcount({{count}}),
+
+              {% current_user_event_pricelimit request.user.id child_name.to_person_id event.id as pricelimit  %}
+
+              PriceLimit-{{pricelimit}}$</li>
             {% endfor %}
             </ul>
 
