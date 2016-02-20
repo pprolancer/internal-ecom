@@ -50,7 +50,6 @@ class EventGiftCondition(models.Model):
             verbose_name = "EventGift"
             verbose_name_plural = "EventGifts"
 
-
     def add(self,from_user,student_events):
         try:
             for student_event in student_events:

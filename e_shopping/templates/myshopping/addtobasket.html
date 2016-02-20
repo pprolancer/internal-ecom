@@ -56,7 +56,7 @@
 <div id="messages_exceed" style="display: none">
    <div class="alert alert-danger  fade in">
             <a class="messages_exceed_close" data-dismiss="alert" href="#">×</a>
-            <div class="alertinner wicon">{{request.user|title}}!!!You have reach upto limit
+            <div class="parent_limit alertinner wicon">
             <i class="icon-exclamation-sign"></i>
             </div>
         </div>
@@ -66,8 +66,9 @@
    <div class="alert alert-danger  fade in">
         <a class="messages_student_limit_exceed_close" data-dismiss="alert" href="#">×
         </a>
-        <div class="alertinner wicon">Student Limit Reach upto limit
-                    <i class="icon-exclamation-sign"></i>
+        <div class="limit_exceed alertinner wicon">
+            <i class="icon-exclamation-sign"></i>
+
         </div>
     </div>
 </div>
@@ -260,23 +261,31 @@ $(".processd_to_checkout").click(function() {
       data: {'studentevent_id':studentevent_id,'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
       dataType : "json",
       success: function(data){
-
         console.log(data.status)
-
         if(data.status==true){
             $('#myModal').modal('show') 
         }
         
-        if(data.status="exceed"){
-            $('#messages_exceed').show()
-        }
-
-        
-        if(data.status="student_limit_exceed"){
+        var student_limit_exceed_message ;
+        student_limit_exceed_message = data.student_msg
+        if(data.status=="student_limit_exceed"){
             $('#messages_student_limit_exceed').show()
+                for(i=0;i<=student_limit_exceed_message.length;i++){
+                    $('.limit_exceed').text(student_limit_exceed_message)
+                }
         }
 
-      }
+        var parent_limit_exceed_message ;
+        parent_limit_exceed_message = data.parent_msg
+        if(data.status=='exceed'){
+            $('#messages_exceed').show()
+            for(i=0;i<=parent_limit_exceed_message.length;i++){
+                    $('.parent_limit').text(parent_limit_exceed_message)
+                }
+        }
+
+
+       }
     });
 });
 

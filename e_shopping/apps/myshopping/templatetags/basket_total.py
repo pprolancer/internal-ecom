@@ -2,7 +2,7 @@ from django import template
 from myshopping.models import (Category, Product, Cart, ProductImage, Order)
 from django.db.models import Sum
 from users.models import Relationship, UserProfile
-from event.models import Event
+from event.models import Event, EventGiftCondition
 
 register = template.Library()
 
@@ -39,6 +39,7 @@ def parent_student_name(from_user):
 
 @register.assignment_tag
 def student_event(student_id):
+    # import pdb;pdb.set_trace()
     events = Event.objects.filter(user_id=student_id)
     return events
 
@@ -51,8 +52,9 @@ def student_event_price_itemcount(student_id):
 
 @register.assignment_tag
 def current_user_event_count(parent_id,student_id,event_id):
+    parentid = UserProfile.objects.get(user_id=parent_id)
     try:
-        current_user_event_count = EventGiftCondition.objects.get(from_user_id=parent_id,
+        current_user_event_count = EventGiftCondition.objects.filter(from_user_id=parentid,
             to_user_id=student_id,event_id=event_id).count()
     except:
         current_user_event_count = UserProfile.objects.get(id=student_id).product_count
@@ -61,9 +63,15 @@ def current_user_event_count(parent_id,student_id,event_id):
 
 @register.assignment_tag
 def current_user_event_pricelimit(parent_id,student_id,event_id):
+    parentid = UserProfile.objects.get(user_id=parent_id)
+
     try:
-        current_user_event_pricelimit = EventGiftCondition.objects.get(from_user_id=parent_id,
-            to_user_id=student_id,event_id=event_id).item_price
+        pricelimit = EventGiftCondition.objects.filter(from_user_id=parentid.id,
+            to_user_id=student_id,event_id=event_id).aggregate(Sum('item_price'))
+        total_price = int(pricelimit['item_price__sum'])
+        studentlimit = UserProfile.objects.get(user_id=student_id)
+
+        current_user_event_pricelimit = studentlimit.product_price_limit - total_price
     except:
         current_user_event_pricelimit = UserProfile.objects.get(id=student_id).product_price_limit
         
