@@ -20,22 +20,18 @@
             <h3>
             <strong>{{child_name.to_person.user.username|title}}:</strong>
             </h3>
-
             {% student_event child_name.to_person_id as events %}
             {% if events %}
             <ul>
             {% for event in events %}
-
-            {{event.is_past_due}}
-
             {% if event.is_past_due %}
 
           <div class='bg-danger'> 
-           {% if event.event_type == 'PersonalEvent' %}
-              <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d, "}}</li>
-            {% else %}
-              <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d, Y"}}</li>
-            {% endif %}
+                 {% if event.event_type == 'PersonalEvent' %}
+                    <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d, "}}</li>
+                  {% else %}
+                    <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d, Y"}}</li>
+                  {% endif %}
 
               {% current_user_event_count request.user.id child_name.to_person_id event.id as count  %}
 
@@ -48,35 +44,30 @@
 
             {% else %}
 
-          <div class='bg-success'>  {% if event.event_type == 'PersonalEvent' %}
-              <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d, "}}</li>
-            {% else %}
-              <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d, Y"}}</li>
-            {% endif %}
-
+          <div class='bg-success'> 
+                 {% if event.event_type == 'PersonalEvent' %}
+                  <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d, "}}</li>
+                {% else %}
+                  <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d, Y"}}</li>
+                {% endif %}
               {% current_user_event_count request.user.id child_name.to_person_id event.id as count  %}
 
               Itemcount-({{count}}),
 
               {% current_user_event_pricelimit request.user.id child_name.to_person_id event.id as pricelimit  %}
 
+
               PriceLimit-({{pricelimit}}$)
             </div>
 
             {% endif %}
 
-
-
             {% endfor %}
             </ul>
-            {% else %}
-
-            <div class="alert alert-warning">Either Events is not created by Admin nor in Event Range...</div>
-
-            {% endif %}
-
+        {% endif %}
          </div>
        {% endfor %}
+
     {% else %}
     <div>Contact To Admin!!!</div>
     {% endif %}

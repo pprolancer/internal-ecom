@@ -226,12 +226,35 @@ class AddToCartView(View):
             return render(request, "myshopping/addtobasket.html", {'status':'False'})
 
 
+# class SendMailToAdmin(View):
+#     @method_decorator(login_required)
+#     def post(self, request, *args, **kwargs):
+#         user_profile = UserProfile.objects.get(user_id=request.user)
+#         orders = Order.objects.filter(user_id=user_profile)
+#         subject = "Cinnemohills Online shopping"
+#         data_dict = {'orders':orders}
+#         message = render_to_string(
+#                     "email/notification.html", data_dict)
+
+#         from_email = 'info@cinnamonhills.com'
+#         to_user = 'store@vdavis.me'
+#         if subject and message and from_email:
+#             try:
+#                 send_mail(subject, message, from_email, [to_user])
+#             except BadHeaderError:
+#                 return HttpResponse('Invalid header found.')
+#             return HttpResponse(
+#                 json.dumps({'status': 'send_mail'}), content_type="application/json")
+#         else:
+#             # In reality we'd use a form class
+#             # to get proper validation errors.
+#             return HttpResponse('Make sure all fields are entered and valid.')
+
+
 class SendMailToAdmin(View):
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-
         user_profile = UserProfile.objects.get(user_id=request.user)
-
         studentevent_ids = request.POST.getlist('studentevent_id[]','')
         student_ids = []
         event_ids = []
@@ -239,15 +262,15 @@ class SendMailToAdmin(View):
             studentevent_id = student_event.split("-")
             event_ids.append(studentevent_id[0])
             student_ids.append(studentevent_id[1])
-
+        
         orders = Order.objects.filter(from_user_id=user_profile,
             to_user_id__in=student_ids,
             event_id__in=event_ids)
+
         subject = "Cinnemohills Online shopping"
 
         data_dict = {'orders':orders}
-        message = render_to_string(
-                    "email/notification.html", data_dict)
+        message = render_to_string("email/notification.html", data_dict)
         msg = MIMEText(message)
         msg['Subject'] = subject
         msg['From'] = settings.EMAIL_HOST
@@ -258,5 +281,7 @@ class SendMailToAdmin(View):
             s.sendmail(msg['From'], msg['To'], msg.as_string() )
         except BadHeaderError:
             return HttpResponse('Invalid header found.')
+
         return HttpResponse(
-            json.dumps({'status': 'send_mail'}), content_type="application/json")
+            json.dumps({'status': 'send_mail'}), 
+            content_type="application/json")

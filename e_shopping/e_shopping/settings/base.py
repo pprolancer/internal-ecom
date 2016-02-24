@@ -13,7 +13,8 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 import sys
 from unipath import Path
-from e_shopping.settings.settings_secret import (EMAIL_HOST, EMAIL_PORT, TO_USER, API,  API_KEY,  SECRET_KEY)
+from e_shopping.settings.settings_secret import (EMAIL_HOST, EMAIL_PORT,
+    SECRET_KEY,TO_USER, API, API_KEY)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_DIR = Path(__file__).ancestor(3)
