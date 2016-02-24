@@ -62,14 +62,17 @@ class LoginView(View):
 
         if form.is_valid():
             user = form.get_user()
+            try:
+                user_role = UserProfile.objects.get(user_id=user.id)
 
-            user_role = UserProfile.objects.get(user_id=user.id)
-            if user_role.user_role!='student':
-                auth_login(request, user)
-                return HttpResponseRedirect(self.get_success_url())
-            else:
-                messages.warning(request, 'Student Login are Not Allowed!!!')
-
+                if user_role.user_role!='student':
+                    auth_login(request, user)
+                    return HttpResponseRedirect(self.get_success_url())
+                else:
+                    messages.warning(request, 'Student Login are Not Allowed!!!')
+            except:
+                messages.warning(request, 'not Allowed contact to Admin,Please Create User Profile!!!')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER','/'))
         ctx = {"form": form}
         return render(request, "registration/login.html", ctx)
 
