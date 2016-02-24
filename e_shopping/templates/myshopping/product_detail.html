@@ -54,10 +54,9 @@
                 <input type="hidden" id="to_person_id" name="to_person_id" value="{{child_name.to_person.id}}" >
                 <input id="to_person_name" class="to_person_name" name="to_person_name" type ="checkbox" value="{{child_name.to_person.user.username}}">{{child_name.to_person.user.username|title}}</label>
               {% student_event child_name.to_person_id  as events %}
-               {% if events %}
                 <ul>
                 {% for event in events %}
-                  <li><input id="student_event_id" class="student_event_id" name="student_event_id" type ="checkbox" value="{{event.id}},{{child_name.to_person.id}},{{product.product_price}}">{{event.event_title}}-{{event.event_start_datetime | date:"M d, Y"}}</li>
+                  <li><input id="student_event_id" class="student_event_id" name="student_event_id" type ="checkbox" value="{{event.id}},{{child_name.to_person.id}},{{product.product_price}}">{{event.event_title}}</li>
 
                 {% current_user_event_count request.user.id child_name.to_person_id event.id as count  %}
                 Itemcount({{count}}),
@@ -69,14 +68,8 @@
 
                 {% endfor %}
                 </ul>
-
-                {% else %}
-
-                <div class="alert alert-warning">Either Events is not created by Admin nor in Event Range...</div>
-
-                {% endif %}
-                </div>
-                {% endfor %}
+            </div>
+            {% endfor %}
         {% else %}
         <div>Contact To Admin!!!</div>
         {% endif %}

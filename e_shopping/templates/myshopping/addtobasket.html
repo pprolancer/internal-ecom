@@ -249,13 +249,12 @@ $( ".update_product" ).click(function() {
     });
 });
 
+
+$(".processd_to_checkout").click(function() {
     var studentevent_id = [];
     $(".studentevent").each(function(){
         studentevent_id.push($(this).val())
     });
-
-$(".processd_to_checkout").click(function() {
-
     $.ajax({
       type: "POST",
       url: "{% url 'processd_to_checkout' %}",
@@ -300,7 +299,7 @@ $('.paymentsubmit').click(function(){
         $.ajax({
               type: "POST",
               url: "{% url 'sendmail_to_admin' %}",
-              data: {'studentevent_id':studentevent_id,'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
+              data: {'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
               dataType : "json",
               success: function(data){
 
