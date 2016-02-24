@@ -37,11 +37,11 @@
           <h4 class="modal-title"><b>Pick Payment Option</b></h4>
         </div>
         <div class="modal-body">
-           <div class="checkbox">
-                <label><input type="checkbox" name="moneyorder" id="moneyorder">Money Order or Check </label>
+           <div class="radio-inline">
+                <label><input type="radio" name="moneyorder" id="moneyorder">Money Order or Check </label>
             </div>
-            <div class="checkbox">
-              <label><input type="checkbox" disabled="disabled"  name="creditcard" id="creditcard">Creditcard</label>
+            <div class="radio-inline">
+              <label><input type="radio"  name="moneyorder" id="moneyorder">Creditcard</label>
             </div>
         </div>
         <div class="modal-footer">
@@ -53,17 +53,23 @@
     </div>
   </div>
 
-<div id="messages_exceed" style="display: none">
-   <div class="alert alert-danger  fade in">
+
+<!--     <div class="alert alert-danger  fade in" id="messages_exceed" style="display: none">
             <a class="messages_exceed_close" data-dismiss="alert" href="#">×</a>
             <div class="parent_limit alertinner wicon">
             <i class="icon-exclamation-sign"></i>
             </div>
-        </div>
-</div>
+    </div> -->
 
-<div id="messages_student_limit_exceed" style="display: none">
-   <div class="alert alert-danger  fade in">
+    <div class="bs-example" style="display: none">
+        <div id="messages_exceed" class="alert alert-info">
+            <a href="#" class="close" data-dismiss="alert">&times;</a>
+            <strong class="parent_limit">Note!</strong> 
+        </div>
+    </div>
+
+
+    <div class="alert alert-danger  fade in" id="messages_student_limit_exceed" style="display: none">
         <a class="messages_student_limit_exceed_close" data-dismiss="alert" href="#">×
         </a>
         <div class="limit_exceed alertinner wicon">
@@ -71,7 +77,7 @@
 
         </div>
     </div>
-</div>
+
 
 <div class="alert alert-success fade in send_mail_successfully" style="display: none">
     <a href="#" class="send_mail_successfully_close" data-dismiss="alert">&times;</a>
@@ -82,6 +88,7 @@
             
         </div>
         <div id="content_inner">
+        {% if products %}
         <div class="basket-title hidden-xs">
             <div class="row">
                 <h2 class="col-sm-2 h3">Gift Image</h2>
@@ -97,6 +104,8 @@
         <form action="." method="post" class="basket_summary" id="basket_formset">
            {% csrf_token %}
             <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="1"><input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="1"><input id="id_form-MIN_NUM_FORMS" name="form-MIN_NUM_FORMS" type="hidden" value="0"><input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="1000">
+
+            
 
             {% for prt in products %}
 
@@ -123,7 +132,7 @@
                         <h3><a href="">{{prt.event.event_title}}</a></h3>
                     </div>
                     <div class="col-sm-2">
-                        <h3><a href="">{{prt.proudct}}</a></h3>
+                        <h3><a href="">{{prt.product.product_name}}</a></h3>
                     </div>
 
                    
@@ -160,6 +169,10 @@
             </div>
             {% endfor %}
 
+
+
+
+
 <div class="row">
     <div class="col-sm-6">
         <div id="voucher_form_container" style="display:none">
@@ -191,6 +204,7 @@
     </table>
 </div>
 </div>
+
 </div>
 
 {% if not status  %}
@@ -206,6 +220,11 @@
 </div>
 </div>
 
+{% else %}
+
+<div>Empty Basket!!!</div>
+
+{% endif %}
 </div>
 {% endblock content %}
 
@@ -225,6 +244,7 @@ $( ".remove_from_cart" ).click(function() {
       success: function(data){
         if(data.status){
             $('#product_'+ parseInt(data.cart_id) ).remove()
+            location.reload();
         }
 
       }
@@ -262,15 +282,19 @@ $(".processd_to_checkout").click(function() {
       data: {'studentevent_id':studentevent_id,'csrfmiddlewaretoken': document.getElementsByName('csrfmiddlewaretoken')[0].value},
       dataType : "json",
       success: function(data){
-        console.log(data.status)
+
         if(data.status==true){
             $('#myModal').modal('show') 
         }
+
+
         
         var student_limit_exceed_message ;
         student_limit_exceed_message = data.student_msg
         if(data.status=="student_limit_exceed"){
+            $('body').scrollTop(0);
             $('#messages_student_limit_exceed').show()
+
                 for(i=0;i<=student_limit_exceed_message.length;i++){
                     $('.limit_exceed').text(student_limit_exceed_message)
                 }
@@ -279,6 +303,7 @@ $(".processd_to_checkout").click(function() {
         var parent_limit_exceed_message ;
         parent_limit_exceed_message = data.parent_msg
         if(data.status=='exceed'){
+            $('body').scrollTop(0);
             $('#messages_exceed').show()
             for(i=0;i<=parent_limit_exceed_message.length;i++){
                     $('.parent_limit').text(parent_limit_exceed_message)

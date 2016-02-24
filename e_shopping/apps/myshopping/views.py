@@ -32,6 +32,7 @@ class IndexView(View):
         return render(request, "index.html", {})
 
     def post(self, request, *args, **kwargs):
+
         return redirect(reverse('home'))
 
 
@@ -141,63 +142,64 @@ class ProcessdCheckout(View):
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        
-        studentevent_ids = request.POST.getlist('studentevent_id[]','')
-        student_ids = []
-        event_ids = []
-        for student_event in studentevent_ids:
-            studentevent_id = student_event.split("-")
-            event_ids.append(studentevent_id[0])
-            student_ids.append(studentevent_id[1])
-        
-        for student_event in studentevent_ids:
-            studentevent_id = student_event.split("-")
-            current_login_user = UserProfile.objects.get(user_id=request.user)
-            student_msg = []
-            parent_msg = []
-            if (current_login_user.product_count!=0) and (current_login_user.product_price_limit!=0):
-                student_current_count = EventGiftCondition.objects.filter(from_user=request.user.profile,
-                to_user_id=studentevent_id[1],event_id=studentevent_id[0])
-                
-                student_count_userprofile = UserProfile.objects.get(id=studentevent_id[1])
+        try:
+            studentevent_ids = request.POST.getlist('studentevent_id[]','')
+            student_ids = []
+            event_ids = []
+            for student_event in studentevent_ids:
+                studentevent_id = student_event.split("-")
+                event_ids.append(studentevent_id[0])
+                student_ids.append(studentevent_id[1])
+            
+            for student_event in studentevent_ids:
+                studentevent_id = student_event.split("-")
+                current_login_user = UserProfile.objects.get(user_id=request.user)
+                student_msg = []
+                parent_msg = []
+                if (current_login_user.product_count!=0) and (current_login_user.product_price_limit!=0):
 
-                updated_count = student_count_userprofile.product_count- int(studentevent_id[2])
-                updated_price = student_count_userprofile.product_price_limit - float(studentevent_id[3])
+                    student_current_count = EventGiftCondition.objects.filter(from_user=request.user.profile,
+                    to_user_id=studentevent_id[1],event_id=studentevent_id[0])
+                    
+                    student_count_userprofile = UserProfile.objects.get(id=studentevent_id[1])
 
-                if (student_current_count.count() <= student_count_userprofile.product_count) and (int(student_current_count[0].item_price) <= updated_price):
+                    updated_count = student_count_userprofile.product_count- int(studentevent_id[2])
+                    updated_price = student_count_userprofile.product_price_limit - float(studentevent_id[3])
 
-                    cart_remove = Cart.objects.filter(from_user=request.user.profile,
-                        to_user_id=studentevent_id[1],event_id=studentevent_id[0])
+                    if (student_current_count.count() <= student_count_userprofile.product_count) and (int(student_current_count[0].item_price) <= updated_price):
 
-                    for i in cart_remove:
-                        order , created = Order.objects.get_or_create(from_user=request.user.profile,
-                            to_user_id=studentevent_id[1],event_id=studentevent_id[0],
-                            product_id=i.product_id,item_quantity=i.quantity,
-                            item_price=i.price,order_status='Pending')
-                        order.save()
+                        cart_remove = Cart.objects.filter(from_user=request.user.profile,
+                            to_user_id=studentevent_id[1],event_id=studentevent_id[0])
 
-                        update_userprofile = UserProfile.objects.filter(id=studentevent_id[1]).update(product_count=updated_count,
-                            product_price_limit = updated_price)
+                        for i in cart_remove:
+                            order , created = Order.objects.get_or_create(from_user=request.user.profile,
+                                to_user_id=studentevent_id[1],event_id=studentevent_id[0],
+                                product_id=i.product_id,item_quantity=i.quantity,
+                                item_price=i.price,order_status='Pending')
+                            order.save()
 
-                        cart_delete = Cart.objects.filter(from_user=request.user.profile,
-                        to_user_id=studentevent_id[1],event_id=studentevent_id[0],product_id=i.product_id)
-                        cart_delete.delete()
+                            cart_delete = Cart.objects.filter(from_user=request.user.profile,
+                            to_user_id=studentevent_id[1],event_id=studentevent_id[0],product_id=i.product_id)
+                            cart_delete.delete()
+
+                    else:
+                        for student_current in student_current_count:
+                            student_msg.append("Student-"+ student_current.to_user.user.username + "Reach upto limit for-"+ student_current.event.event_title +",")
+                        return HttpResponse(
+                            json.dumps({'status': 'student_limit_exceed','student_msg':student_msg}), content_type="application/json")
 
                 else:
-                    for student_current in student_current_count:
-                        student_msg.append("Student-"+ student_current.to_user.user.username + "Reach upto limit for-"+ student_current.event.event_title +",")
+                    parent_msg = current_login_user.user.username + "Reach upto limit"
+
                     return HttpResponse(
-                        json.dumps({'status': 'student_limit_exceed','student_msg':student_msg}), content_type="application/json")
+                        json.dumps({'status': 'exceed','parent_msg':parent_msg}), content_type="application/json")
+                    
 
-            else:
-                parent_msg = current_login_user.user.username + "Reach upto limit"
-
-                return HttpResponse(
-                    json.dumps({'status': 'exceed','parent_msg':parent_msg}), content_type="application/json")
-                
-
-        return HttpResponse(
-                    json.dumps({'status': True}), content_type="application/json")                               
+            return HttpResponse(
+                        json.dumps({'status': True}), content_type="application/json")                               
+        except:
+            return HttpResponse(
+                        json.dumps({'status': False}), content_type="application/json")
 
 class CheckoutList(View):
 
@@ -211,6 +213,7 @@ class AddToCartView(View):
     """ Show Product into Basket """
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
+
         user_profile = UserProfile.objects.get(user_id=request.user)
         all_cart = Cart.objects.filter(from_user_id=user_profile)
         try:

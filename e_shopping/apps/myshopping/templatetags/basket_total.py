@@ -62,16 +62,24 @@ def student_event_price_itemcount(student_id):
 @register.assignment_tag
 def current_user_event_count(parent_id,student_id,event_id):
     parentid = UserProfile.objects.get(user_id=parent_id)
-    
-    current_user_event_count = EventGiftCondition.objects.filter(from_user_id=parentid,
+    event_count = EventGiftCondition.objects.filter(from_user_id=parentid,
             to_user_id=student_id,event_id=event_id).count()
-    if not current_user_event_count:
+    if event_count:
+        user_profile_gift_count = UserProfile.objects.get(id=student_id).product_count
+        user_event_count =  user_profile_gift_count - event_count
+        if user_event_count <=0:
+            current_user_event_count = 0
+        else:
+            current_user_event_count = user_event_count
+
+    else:
         current_user_event_count = UserProfile.objects.get(id=student_id).product_count
     return current_user_event_count
 
 
 @register.assignment_tag
 def current_user_event_pricelimit(parent_id,student_id,event_id):
+
     parentid = UserProfile.objects.get(user_id=parent_id)
     price_check =  EventGiftCondition.objects.filter(from_user_id=parentid.id,
         to_user_id=student_id,event_id=event_id)
@@ -81,9 +89,19 @@ def current_user_event_pricelimit(parent_id,student_id,event_id):
     
         total_price = int(pricelimit['item_price__sum'])
         studentlimit = UserProfile.objects.get(id=student_id)
+        user_event_pricelimit = studentlimit.product_price_limit - total_price
 
-        current_user_event_pricelimit = studentlimit.product_price_limit - total_price
+        if user_event_pricelimit<=0:
+            current_user_event_pricelimit = 0
+        else:
+            current_user_event_pricelimit = user_event_pricelimit
     else:
         current_user_event_pricelimit = UserProfile.objects.get(id=student_id).product_price_limit
         
     return current_user_event_pricelimit
+
+
+@register.assignment_tag
+def current_user_count(parent_id):
+    current_user_count = UserProfile.objects.get(user_id=parent_id)
+    return current_user_count

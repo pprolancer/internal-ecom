@@ -46,21 +46,30 @@ class LoginView(View):
 
 
     def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            if request.user.is_superuser:
+
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER','/admin/'))
         form = AuthenticationForm()
+
+
         ctx = {"form": form}
         return render(request, "registration/login.html", ctx)
+
 
     def post(self, request, *args, **kwargs):
         form = AuthenticationForm(data=request.POST)
 
         if form.is_valid():
             user = form.get_user()
+
             user_role = UserProfile.objects.get(user_id=user.id)
             if user_role.user_role!='student':
                 auth_login(request, user)
                 return HttpResponseRedirect(self.get_success_url())
             else:
                 messages.warning(request, 'Student Login are Not Allowed!!!')
+
         ctx = {"form": form}
         return render(request, "registration/login.html", ctx)
 
@@ -72,10 +81,12 @@ class LoginView(View):
 class LogoutView(View):
 
     def get(self, request, *args, **kwargs):
+
         auth_logout(request)
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
+
         url = reverse('user-login')
         return url
 

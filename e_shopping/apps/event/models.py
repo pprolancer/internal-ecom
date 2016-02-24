@@ -2,7 +2,7 @@ from django.db import models
 from sorl.thumbnail import ImageField
 from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User
-from datetime import datetime
+from datetime import datetime, date
 from auditlog.registry import auditlog
 import uuid
 import os
@@ -34,6 +34,16 @@ class Event(models.Model):
     class Meta:
         verbose_name = "Event"
         verbose_name_plural = "Events"
+
+    @property
+    def is_past_due(self):
+        dt_tz = self.event_start_datetime
+        dt = dt_tz.replace(tzinfo=None)
+        current_datetime = datetime.today()
+        dtt = current_datetime.replace(microsecond=0)
+        if dtt > dt:
+            return False
+        return False
 
 
 class EventGiftCondition(models.Model):
