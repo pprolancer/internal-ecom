@@ -42,7 +42,7 @@ class Event(models.Model):
         current_datetime = datetime.today()
         dtt = current_datetime.replace(microsecond=0)
         if dtt > dt:
-            return False
+            return True
         return False
 
 

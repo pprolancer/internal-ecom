@@ -10,10 +10,9 @@
 
 
     {% current_user_count request.user.id  as current_user_count  %}
-    <strong>Welcome, </strong>{{request.user.username}},to the Cinnamonhills Gift store
-    <div>Your limit,count  to purchas gift are - ({{current_user_count.product_count}}),({{current_user_count.product_price_limit}})$</div>
+    <strong>Welcome, </strong>{{request.user.username}},To the Cinnamonhills Gift store
+    <div>Your item Count is-{{current_user_count.product_count}} and price limit -{{current_user_count.product_price_limit}}$</div>
     {% parent_student_name  request.user as child_names %}
-      {% if child_names %}
       {% for child_name in child_names %}
 
          <div>
@@ -25,52 +24,52 @@
             <ul>
             {% for event in events %}
             {% if event.is_past_due %}
-
-          <div class='bg-danger'> 
-                 {% if event.event_type == 'PersonalEvent' %}
-                    <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d, "}}</li>
-                  {% else %}
-                    <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d, Y"}}</li>
-                  {% endif %}
-
-              {% current_user_event_count request.user.id child_name.to_person_id event.id as count  %}
-
-              Itemcount-({{count}}),
-
-              {% current_user_event_pricelimit request.user.id child_name.to_person_id event.id as pricelimit  %}
-
-              PriceLimit-({{pricelimit}}$)
-          </div>
-
-            {% else %}
-
-          <div class='bg-success'> 
-                 {% if event.event_type == 'PersonalEvent' %}
-                  <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d, "}}</li>
-                {% else %}
-                  <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d, Y"}}</li>
+            <div class="bg-danger">    
+                {% if event.event_type == 'PersonalEvent' %}
+                      <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d "}}</li>
+                    {% else %}
+                      <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d, Y"}}</li>
                 {% endif %}
-              {% current_user_event_count request.user.id child_name.to_person_id event.id as count  %}
 
-              Itemcount-({{count}}),
+                {% current_user_event_count request.user.id child_name.to_person_id event.id as count  %}
 
-              {% current_user_event_pricelimit request.user.id child_name.to_person_id event.id as pricelimit  %}
+                Itemcount-({{count}}),
 
+                {% current_user_event_pricelimit request.user.id child_name.to_person_id event.id as pricelimit  %}
 
-              PriceLimit-({{pricelimit}}$)
+                PriceLimit-({{pricelimit}}$)
             </div>
+            {% else %}
+              <div class="bg-success">    
+                {% if event.event_type == 'PersonalEvent' %}
+                      <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d "}}</li>
+                    {% else %}
+                      <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d, Y"}}</li>
+                {% endif %}
 
+                {% current_user_event_count request.user.id child_name.to_person_id event.id as count  %}
+
+                Itemcount-({{count}}),
+
+                {% current_user_event_pricelimit request.user.id child_name.to_person_id event.id as pricelimit  %}
+
+                PriceLimit-({{pricelimit}}$)
+            </div>
             {% endif %}
 
-            {% endfor %}
+
+
+          {% endfor %}
             </ul>
-        {% endif %}
+            {% else %}
+            <div>For creating Event...Contact To Admin !!!</div>
+            {% endif %}
          </div>
+
+
        {% endfor %}
 
-    {% else %}
-    <div>Contact To Admin!!!</div>
-    {% endif %}
+
     {% endif %}
       </div>
    </div>

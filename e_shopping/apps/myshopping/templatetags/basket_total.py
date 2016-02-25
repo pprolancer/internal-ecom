@@ -75,7 +75,7 @@ def current_user_event_pricelimit(parent_id,student_id,event_id):
     
     pricelimit = EventGiftCondition.objects.filter(from_user_id=parentid.id,
         to_user_id=student_id,event_id=event_id).aggregate(Sum('item_price'))
-    if pricelimit :
+    try:
         total_price = int(pricelimit['item_price__sum'])
         studentlimit = UserProfile.objects.get(id=student_id)
         user_event_pricelimit = studentlimit.product_price_limit - total_price
@@ -84,7 +84,7 @@ def current_user_event_pricelimit(parent_id,student_id,event_id):
             current_user_event_pricelimit = 0
         else:
             current_user_event_pricelimit = user_event_pricelimit
-    else:
+    except:
         current_user_event_pricelimit = UserProfile.objects.get(id=student_id).product_price_limit
         
     return current_user_event_pricelimit
