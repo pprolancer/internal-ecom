@@ -1,3 +1,6 @@
+[![Code Issues](https://www.quantifiedcode.com/api/v1/project/cff3699fed0b4fb29267c07aa20c9886/badge.svg)](https://www.quantifiedcode.com/app/project/cff3699fed0b4fb29267c07aa20c9886)
+[![Build Status](https://travis-ci.org/Heteroskedastic/internal-ecom.svg?branch=master)](https://travis-ci.org/Heteroskedastic/internal-ecom)
+
 # Student gift store
 
 The idea behind this store is to provide a way for parents to buy gifts for students at a private boarding school.
