@@ -140,7 +140,7 @@
                         <div class="checkout-quantity">
                             <div class="input-group  ">
                                 <input class="form-control" 
-                                id="id-quantity_{{prt.product.id}}" name="id-quantity" type="number" value="{{prt.quantity}}">
+                                id="id-quantity_{{prt.product.id}}" name="id-quantity" type="number" min="1" step="1" value="{{prt.quantity}}">
                             <span class="input-group-btn">
                                 <button class="btn btn-default update_product" type="button" data-loading-text="Updating..." data-value="{{prt.product.id}}" >Update</button>
                             </span>

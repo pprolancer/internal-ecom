@@ -1,0 +1,36 @@
+[   
+    {   
+        "model": "myshopping.category",  
+        "pk": 1,
+        "fields": {
+            "title": "Electronic"
+            }
+    },
+    {   
+        "model": "myshopping.category",  
+        "pk": 2,
+        "fields": {
+            "title": "Category one"
+            }
+    },
+
+    {   
+        "model": "myshopping.product",  
+        "pk": 2,
+        "fields": {
+            "category":1,
+            "product_name": "Apple"
+            }
+    },
+
+    {   
+        "model": "myshopping.product",  
+        "pk": 3,
+        "fields": {
+            "category":1,
+            "product_name": "Apple iphone 4S 8GB (Black)"
+            }
+    }
+
+
+]
