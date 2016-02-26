@@ -9,7 +9,7 @@ install:
   - "pip install -r e_shopping/requirement.txt"
   - pip install codecov
 before_script:
-  - python e_shopping/manage.py syncdb --noinput
+  #- python e_shopping/manage.py syncdb --noinput
 # command to run tests
 script:
   - python e_shopping/manage.py test --settings=e_shopping.e_shopping.settings.dev.py --noinput
