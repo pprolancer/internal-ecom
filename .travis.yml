@@ -5,13 +5,14 @@ python:
   # - "nightly" # currently points to 3.6-dev
 
 # command to install dependencies
-install:     - "pip install -r requirements.txt"
-             - pip install codecov
-
-before_script:   # - python
-manage.py syncdb --noinput
-# command to run tests script:   # - python
-manage.py test --settings=e_shopping.settings --noinput
+install:
+  - "pip install -r e_shopping/requirement.txt"
+  - pip install codecov
+before_script:
+  #- python e_shopping/manage.py syncdb --noinput
+# command to run tests
+script:
+  - python e_shopping/manage.py test --settings=e_shopping.e_shopping.settings.travistest.py --noinput
 
 notifications:
   email: false
