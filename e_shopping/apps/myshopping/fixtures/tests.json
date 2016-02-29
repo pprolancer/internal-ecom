@@ -19,7 +19,9 @@
         "pk": 1,
         "fields": {
             "category":1,
-            "product_name": "Apple"
+            "product_name": "Apple",
+            "product_price": "10",
+            "product_description":"abcd"
             }
     },
 
@@ -28,9 +30,10 @@
         "pk": 2,
         "fields": {
             "category":1,
-            "product_name": "Apple iphone 4S 8GB (Black)"
+            "product_name": "Apple iphone 4S 8GB (Black)",
+            "product_price": "21749.00",
+            "product_description":"Apple iPhone 4S features a dual-core A5 chip, an 8MP iSight camera that shoots 1080p HD video, the intelligent assistant known as Siri, and endless?"
             }
     }
-
 
 ]

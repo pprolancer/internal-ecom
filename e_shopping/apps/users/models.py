@@ -2,13 +2,16 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.core.validators import MinValueValidator
-
+import calendar
 
 # Create your models here.
 USER_TYPES = (
     ('parent', 'PARENT'),
     ('student', 'STUDENT'),
 )
+
+CUSTOM_YEAR = tuple((str(n), str(n)) for n in range(1995, datetime.now().year + 1))
+MONTHS_CHOICES = [(str(i), calendar.month_name[i]) for i in range(1,13)]
 
 class UserProfile(models.Model):
 
@@ -18,15 +21,17 @@ class UserProfile(models.Model):
     product_count = models.IntegerField(default=0)
     product_price_limit = models.PositiveIntegerField(default=0,
         validators=[MinValueValidator(0)])
-    birth_date =  models.DateField(
-        blank=True, null=True)
-    
+    birth_month = models.CharField(max_length=9, choices=MONTHS_CHOICES, default='1')
+    birth_year =  models.CharField(max_length=4, choices=CUSTOM_YEAR, default=datetime.now().year)
+    birth_date =  models.DateField(blank=True, null=True)
+
     class Meta:
         verbose_name = "User Profile"
         verbose_name_plural = "User Profiles"
 
     def __str__(self):
         return '{0} - {1}'.format(self.user.username, self.user_role)
+
 
 class Relationship(models.Model):
     from_person = models.ForeignKey(UserProfile, related_name='from_people')

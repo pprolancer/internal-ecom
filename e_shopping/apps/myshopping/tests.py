@@ -2,7 +2,7 @@ from django.test import TestCase
 
 # Create your tests here.
 from django.contrib.auth.models import User
-from myshopping.models import Category, Product
+from myshopping.models import Category, Product, Cart
 
 
 class CategoryTestCase(TestCase):
@@ -42,16 +42,31 @@ class ProductTestCase(TestCase):
     def test_pass_stringification(self):
         """
         Test the stringification of a ``Product`` object. A
-        "human-readable" representation of an ``Product`` object.
+        "human-readable" representation of an ``Product`` object and check correct value for field.
         """
         product_name_1 = self.product_1.product_name
-        self.assertEqual(self.product_1.__str__(), product_name_1, "USER STRING METHOD WORK")
+        self.assertEqual(self.product_1.__str__(), product_name_1, "PRODUCT STRING METHOD WORK")
+
+        product_product_price_1 = self.product_1.product_price
+        self.assertEqual(self.product_1.__str__(), product_product_price_1, "PRODUCT STRING METHOD NOT WORK")        
+
+        product_product_description_1 = self.product_1.product_description
+        self.assertEqual(self.product_1.__str__(), product_product_description_1, "PRODUCT STRING METHOD NOT WORK")        
+
 
     def test_fail_stringification(self):
         """
         Test the stringification of a ``Product`` object. A
-        "human-readable" representation of an ``Product`` object.
+        "human-readable" representation of an ``Product`` object and check correct value for field.
         """
 
         product_name_2 = self.product_2.product_name
-        self.assertEqual(self.product_2.__str__(), product_name_2, "USER STRING METHOD NOT WORK")        
+        self.assertEqual(self.product_2.__str__(), product_name_2, "PRODUCT STRING METHOD NOT WORK")        
+
+        product_product_price_2 = self.product_2.product_price
+        self.assertEqual(self.product_2.__str__(), product_product_price_2, "PRODUCT STRING METHOD NOT WORK")        
+
+        product_product_description_2 = self.product_2.product_description
+        self.assertEqual(self.product_2.__str__(), product_product_description_2, "PRODUCT STRING METHOD NOT WORK")        
+
+ 

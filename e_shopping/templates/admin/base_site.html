@@ -1,0 +1,34 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+
+{% block footer %}
+<script type="text/javascript">
+	django.jQuery(document).ready(function(){
+		manage_birth_date(django.jQuery("#id_user_role").val());
+		django.jQuery("#id_user_role").change(function(){
+			manage_birth_date(django.jQuery(this).val());
+		});
+	});
+
+	function manage_birth_date(value){
+		if(value != ''){
+			if(value == 'parent'){
+				django.jQuery(".field-birth_month, .field-birth_year").hide();
+				django.jQuery(".field-birth_date").show();
+			}
+			if(value == 'student'){
+				django.jQuery(".field-birth_date").hide();
+				django.jQuery(".field-birth_month, .field-birth_year").show();
+			}
+		}		
+	}
+</script>
+{% endblock footer %}
+
+
+{% block branding %}
+
+<h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></h1>
+{% endblock %}
+{% block nav-global %}{% endblock %}
