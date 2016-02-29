@@ -5,17 +5,21 @@ python:
   # - "nightly" # currently points to 3.6-dev
 
 # command to install dependencies
-install:
-    - "pip install -r requirements.txt"
-    - pip install codecov
-before_script:
-  # - python manage.py syncdb --noinput
-# command to run tests
-script:
-  # - python manage.py test --settings=Practice_Referral.test_settings --noinput
+install:     - "pip install -r requirements.txt"
+             - pip install codecov
+
+before_script:   # - python
+manage.py syncdb --noinput
+# command to run tests script:   # - python
+manage.py test --settings=e_shopping.settings --noinput
 
 notifications:
   email: false
 
 after_success:
   - codecov
+
+install : True
+
+script: nosetests
+
