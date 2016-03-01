@@ -48,10 +48,10 @@ class ProductTestCase(TestCase):
         self.assertEqual(self.product_1.__str__(), product_name_1, "PRODUCT STRING METHOD WORK")
 
         product_product_price_1 = self.product_1.product_price
-        self.assertEqual(self.product_1.product_price.__str__(), product_product_price_1, "PRODUCT STRING METHOD NOT WORK")
+        self.assertEqual(self.product_1.product_price.format(), product_product_price_1, "PRODUCT STRING METHOD NOT WORK")
 
         product_product_description_1 = self.product_1.product_description
-        self.assertEqual(self.product_1.product_description.__str__(), product_product_description_1, "PRODUCT STRING METHOD NOT WORK")
+        self.assertEqual(self.product_1.product_description.format(), product_product_description_1, "PRODUCT STRING METHOD NOT WORK")
 
 
     def test_fail_stringification(self):
@@ -64,9 +64,9 @@ class ProductTestCase(TestCase):
         self.assertEqual(self.product_2.__str__(), product_name_2, "PRODUCT STRING METHOD NOT WORK")
 
         product_product_price_2 = self.product_2.product_price
-        self.assertEqual(self.product_2.product_price.__str__(), product_product_price_2, "PRODUCT STRING METHOD NOT WORK")
+        self.assertEqual(self.product_2.product_price.format(), product_product_price_2, "PRODUCT STRING METHOD NOT WORK")
 
         product_product_description_2 = self.product_2.product_description
-        self.assertEqual(self.product_2.product_description.__str__(), product_product_description_2, "PRODUCT STRING METHOD NOT WORK")
+        self.assertEqual(self.product_2.product_description.format(), product_product_description_2, "PRODUCT STRING METHOD NOT WORK")
 
  
