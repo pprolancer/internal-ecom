@@ -2,6 +2,8 @@ from .base import *
 
 DEBUG = True
 
+SECRET_KEY = "my_super_dev_secret"
+
 ALLOWED_HOSTS = ['*']
 
 DATABASES = {

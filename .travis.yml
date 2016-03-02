@@ -2,25 +2,19 @@ language: python
 python:
   - "3.4"
   - "3.5"
-  # - "nightly" # currently points to 3.6-dev
 
-# command to install dependencies
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y imagemagick
+
 install:
   - "pip install -r e_shopping/requirement.txt"
-  - pip install codecov
-before_script:
-  #- python e_shopping/manage.py syncdb --noinput
-# command to run tests
-script:
-  - python e_shopping/manage.py test --settings=e_shopping.e_shopping.settings.travistest.py --noinput
+  - "pip install codecov"
+
+script: python e_shopping/manage.py test --settings=e_shopping.settings.travistest myshopping users
 
 notifications:
   email: false
 
 after_success:
   - codecov
-
-install : True
-
-script: make test
-
