@@ -114,7 +114,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'US/Mountain'
 
 USE_I18N = True
 
@@ -133,7 +134,7 @@ STATIC_ROOT = PROJECT_DIR.child("collected_static")
 
 STATICFILES_DIRS = [
     Path(PROJECT_DIR.child("static"))
-    
+
 ]
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer' # support auto logout for inactive user
