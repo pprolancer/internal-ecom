@@ -51,7 +51,7 @@
 
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="javascript:void(0)">About</a>
+                        <a href="{% url 'about' %}">About</a>
                     </li>
                     <li>
                         <a href="{% url 'event' %}">Event</a>
@@ -77,7 +77,7 @@
                         <li ><a href="#">{{child_name.to_person.user.username}}</a></li>
                     {% endfor %}
                       </ul>
-                    
+
                     </li>
                     {% else %}
                     <li><a href="{% url 'welcome' %}">Please select user</a></li>
@@ -109,7 +109,7 @@
         {% block content %}
 
         {% endblock%}
-        
+
     </div>
     <!-- /.container -->
     {% include "footer.html" %}
