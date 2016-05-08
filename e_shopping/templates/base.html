@@ -40,9 +40,11 @@
                 </button>
 
                 {% if user.is_authenticated %}
-                <a class="navbar-brand" href="{% url 'home' %}">MyShop</a>
+                <a class="navbar-brand" href="{% url 'home' %}">Cinnamon Hills Student Gift Store
+</a>
                 {% else %}
-                <a class="navbar-brand" href="#">MyShop</a>
+                <a class="navbar-brand" href="#">Cinnamon Hills Student Gift Store
+</a>
                 {% endif %}
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -51,7 +53,7 @@
 
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="javascript:void(0)">About</a>
+                        <a href="{% url 'about' %}">About</a>
                     </li>
                     <li>
                         <a href="{% url 'event' %}">Event</a>
@@ -77,7 +79,7 @@
                         <li ><a href="#">{{child_name.to_person.user.username}}</a></li>
                     {% endfor %}
                       </ul>
-                    
+
                     </li>
                     {% else %}
                     <li><a href="{% url 'welcome' %}">Please select user</a></li>
@@ -109,7 +111,7 @@
         {% block content %}
 
         {% endblock%}
-        
+
     </div>
     <!-- /.container -->
     {% include "footer.html" %}

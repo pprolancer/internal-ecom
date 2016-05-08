@@ -2,7 +2,7 @@ from django.conf.urls import  url
 from django.views.generic import TemplateView
 from myshopping.views import (IndexView,HomeView, ProductDetailView, RemoveFromCartView,
 	UpdateCartView, ProcessdCheckout, CheckoutList, AddToCartView,
-	SendMailToAdmin)
+	SendMailToAdmin, about_view)
 
 urlpatterns = [
 
@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^myshopping-checkout/$', CheckoutList.as_view(), name="myshopping-checkout"),
     url(r'^addtobasket/$', AddToCartView.as_view(), name="add_to_basket"),
     url(r'^sendemail/$', SendMailToAdmin.as_view(), name="sendmail_to_admin"),
+    url(r'^about/$', about_view, name="about"),
 ]

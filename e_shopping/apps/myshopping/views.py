@@ -81,7 +81,7 @@ class ProductDetailView(View):
             all_cart = Cart.objects.filter(from_user=request.user.profile,
                 to_user_id__in=student_id,event_id__in=event_id)
 
-            cart_add = Cart() 
+            cart_add = Cart()
             quantity = "1"
 
             cart =  Cart.objects.filter(product_id=product_id,
@@ -126,7 +126,7 @@ class UpdateCartView(View):
         quantity= request.POST.get('quantity','')
         to_user = request.POST.get('to_user','')
         to_user_profile = UserProfile.objects.filter(id=to_user)
-        
+
         cart = Cart.objects.get(product_id=product_id,
                from_user=request.user.profile,to_user=to_user_profile)
         if cart:
@@ -134,7 +134,7 @@ class UpdateCartView(View):
                    from_user=request.user.profile,to_user=to_user_profile).update(quantity=quantity)
 
         return HttpResponse(
-            json.dumps({'status': True,'product_id':product_id}), 
+            json.dumps({'status': True,'product_id':product_id}),
             content_type="application/json")
 
 
@@ -150,7 +150,7 @@ class ProcessdCheckout(View):
                 studentevent_id = student_event.split("-")
                 event_ids.append(studentevent_id[0])
                 student_ids.append(studentevent_id[1])
-            
+
             for student_event in studentevent_ids:
                 studentevent_id = student_event.split("-")
                 current_login_user = UserProfile.objects.get(user_id=request.user)
@@ -160,7 +160,7 @@ class ProcessdCheckout(View):
 
                     student_current_count = EventGiftCondition.objects.filter(from_user=request.user.profile,
                     to_user_id=studentevent_id[1],event_id=studentevent_id[0])
-                    
+
                     student_count_userprofile = UserProfile.objects.get(id=studentevent_id[1])
 
                     updated_count = student_count_userprofile.product_count- int(studentevent_id[2])
@@ -193,10 +193,10 @@ class ProcessdCheckout(View):
 
                     return HttpResponse(
                         json.dumps({'status': 'exceed','parent_msg':parent_msg}), content_type="application/json")
-                    
+
 
             return HttpResponse(
-                        json.dumps({'status': True}), content_type="application/json")                               
+                        json.dumps({'status': True}), content_type="application/json")
         except:
             return HttpResponse(
                         json.dumps({'status': False}), content_type="application/json")
@@ -262,7 +262,7 @@ class SendMailToAdmin(View):
             studentevent_id = student_event.split("-")
             event_ids.append(studentevent_id[0])
             student_ids.append(studentevent_id[1])
-        
+
         orders = Order.objects.filter(from_user_id=user_profile,
             to_user_id__in=student_ids,
             event_id__in=event_ids)
@@ -283,5 +283,11 @@ class SendMailToAdmin(View):
             return HttpResponse('Invalid header found.')
 
         return HttpResponse(
-            json.dumps({'status': 'send_mail'}), 
+            json.dumps({'status': 'send_mail'}),
             content_type="application/json")
+
+
+def about_view(request):
+    ''' about view '''
+
+    return render(request, "myshopping/about.html", {})
