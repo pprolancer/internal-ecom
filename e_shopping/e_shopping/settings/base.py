@@ -114,6 +114,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
+LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = '/home/'
+
 # TIME_ZONE = 'UTC'
 TIME_ZONE = 'US/Mountain'
 
