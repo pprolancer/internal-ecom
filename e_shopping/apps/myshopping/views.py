@@ -288,4 +288,6 @@ class SendMailToAdmin(View):
 
 
 def about_view(request):
+    ''' about view '''
+
     return render(request, "myshopping/about.html", {})
