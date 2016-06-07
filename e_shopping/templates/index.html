@@ -1,4 +1,4 @@
-{% extends "header.html" %}
+{% extends "base.html" %}
 {% block content %}
 {% load basket_total %}
 
@@ -24,7 +24,7 @@
             <ul>
             {% for event in events %}
             {% if event.is_past_due %}
-            <div class="bg-danger">    
+            <div class="bg-danger">
                 {% if event.event_type == 'PersonalEvent' %}
                       <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d "}}</li>
                     {% else %}
@@ -40,7 +40,7 @@
                 PriceLimit-({{pricelimit}}$)
             </div>
             {% else %}
-              <div class="bg-success">    
+              <div class="bg-success">
                 {% if event.event_type == 'PersonalEvent' %}
                       <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d "}}</li>
                     {% else %}
@@ -73,13 +73,13 @@
     {% endif %}
       </div>
    </div>
-   
+
    <div class = "form-group">
       <div class = "col-sm-offset-2 col-sm-10">
          <button type="submit" class = "btn btn-primary">Next</button>
       </div>
    </div>
-	
+
 </form>
-        
+
 {% endblock content %}

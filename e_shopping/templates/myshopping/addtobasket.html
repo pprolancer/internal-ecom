@@ -27,39 +27,31 @@
         <h1>Basket</h1>
     </div>
 
- <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
 
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title"><b>Pick Payment Option</b></h4>
-        </div>
-        <div class="modal-body">
-           <div class="radio-inline">
-                <label><input type="radio" name="moneyorder" id="moneyorder">Money Order or Check </label>
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title"><b>Pick Payment Option</b></h4>
             </div>
-            <div class="radio-inline">
-              <label><input type="radio"  name="moneyorder" id="moneyorder">Creditcard</label>
+            <div class="modal-body">
+               <div class="radio-inline">
+                    <label><input type="radio" name="moneyorder" id="moneyorder">Money Order or Check </label>
+                </div>
+                <div class="radio-inline">
+                  <label><input type="radio"  name="moneyorder" id="moneyorder">Creditcard</label>
+                </div>
             </div>
-        </div>
-        <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-default paymentsubmit" data-dismiss="modal">Submit</button>
-        </div>
-      </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default paymentsubmit" data-dismiss="modal">Submit</button>
+            </div>
+          </div>
 
+        </div>
     </div>
-  </div>
-
-
-<!--     <div class="alert alert-danger  fade in" id="messages_exceed" style="display: none">
-            <a class="messages_exceed_close" data-dismiss="alert" href="#">×</a>
-            <div class="parent_limit alertinner wicon">
-            <i class="icon-exclamation-sign"></i>
-            </div>
-    </div> -->
 
     <div class="bs-example" style="display: none">
         <div id="messages_exceed" class="alert alert-info">
@@ -79,153 +71,153 @@
     </div>
 
 
-<div class="alert alert-success fade in send_mail_successfully" style="display: none">
-    <a href="#" class="send_mail_successfully_close" data-dismiss="alert">&times;</a>
-    <strong>Success!</strong> Thank you for your order. A confirmation email has been sent.
-    <p class="text-muted"><em>Redirecting to store home page ...</em></p>
-</div>
+    <div class="alert alert-success fade in send_mail_successfully" style="display: none">
+        <a href="#" class="send_mail_successfully_close" data-dismiss="alert">&times;</a>
+        <strong>Success!</strong> Thank you for your order. A confirmation email has been sent.
+        <p class="text-muted"><em>Redirecting to store home page ...</em></p>
+    </div>
     <div class="content">
         <div id="promotions">
 
         </div>
         <div id="content_inner">
         {% if products %}
-        <div class="basket-title hidden-xs">
-            <div class="row">
-                <h2 class="col-sm-2 h3">Gift Image</h2>
-                <p class="col-sm-1 h3">Student Name</p>
-                <p class="col-sm-1 h3">Occasion</p>
-                <p class="col-sm-2 h3">Gift Name</p>
-                <p class="col-sm-2 h3">Quantity</p>
-                <p class="col-sm-1 h3 align-right">Price</p>
-                <p class="col-sm-1 h3 align-right">Total</p>
-                <p class="col-sm-1 h3 align-right">Remove Item</p>
+            <div class="basket-title hidden-xs">
+                <div class="row">
+                    <h2 class="col-sm-2 h3">Gift Image</h2>
+                    <p class="col-sm-1 h3">Student Name</p>
+                    <p class="col-sm-1 h3">Occasion</p>
+                    <p class="col-sm-2 h3">Gift Name</p>
+                    <p class="col-sm-2 h3">Quantity</p>
+                    <p class="col-sm-1 h3 align-right">Price</p>
+                    <p class="col-sm-1 h3 align-right">Total</p>
+                    <p class="col-sm-1 h3 align-right">Remove Item</p>
+                </div>
             </div>
-        </div>
-        <form action="." method="post" class="basket_summary" id="basket_formset">
-           {% csrf_token %}
-            <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="1"><input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="1"><input id="id_form-MIN_NUM_FORMS" name="form-MIN_NUM_FORMS" type="hidden" value="0"><input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="1000">
+            <form action="." method="post" class="basket_summary" id="basket_formset">
+               {% csrf_token %}
+                <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="1"><input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="1"><input id="id_form-MIN_NUM_FORMS" name="form-MIN_NUM_FORMS" type="hidden" value="0"><input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="1000">
 
 
 
-            {% for prt in products %}
+                {% for prt in products %}
 
-            <div class="basket-items" id="product_{{prt.id}}">
-                <div class="row" >
-                    <div class="col-sm-2">
-                        <input type="hidden" id="studentevent" class="studentevent" value="{{prt.event.id}}-{{prt.to_user.id}}-{{prt.quantity}}-{{prt.price}}">
-                        <input id="id_form-0-id" name="form-0-id" type="hidden" value="2873">
-                        {% if prt.product.product_image %}
+                <div class="basket-items" id="product_{{prt.id}}">
+                    <div class="row" >
+                        <div class="col-sm-2">
+                            <input type="hidden" id="studentevent" class="studentevent" value="{{prt.event.id}}-{{prt.to_user.id}}-{{prt.quantity}}-{{prt.price}}">
+                            <input id="id_form-0-id" name="form-0-id" type="hidden" value="2873">
+                            {% if prt.product.product_image %}
 
-                        {% thumbnail prt.product.product_image.image "100x100" crop="center" as im %}
-                        <img src="{{im.url}}" width="{{im.width}}" height="{{ im.height }}">
-                        {% endthumbnail %}
+                            {% thumbnail prt.product.product_image.image "100x100" crop="center" as im %}
+                            <img src="{{im.url}}" width="{{im.width}}" height="{{ im.height }}">
+                            {% endthumbnail %}
 
-                    {% else %}
-                    <img src="http://placehold.it/320x150" alt="" width="50" height="50">
-                    {% endif %}
-                    </div>
-                    <div class="col-sm-1">
-                        <h3><a href="" class="to_user_id_{{prt.product.id}}" id="to_user_id_{{prt.product.id}}" data-value="{{prt.to_user.id}}">{{prt.to_user.user.username|title}}</a></h3>
-                    </div>
+                        {% else %}
+                        <img src="http://placehold.it/320x150" alt="" width="50" height="50">
+                        {% endif %}
+                        </div>
+                        <div class="col-sm-1">
+                            <h3><a href="" class="to_user_id_{{prt.product.id}}" id="to_user_id_{{prt.product.id}}" data-value="{{prt.to_user.id}}">{{prt.to_user.user.username|title}}</a></h3>
+                        </div>
 
-                    <div class="col-sm-1">
-                        <h3><a href="">{{prt.event.event_title}}</a></h3>
-                    </div>
-                    <div class="col-sm-2">
-                        <h3><a href="">{{prt.product.product_name}}</a></h3>
-                    </div>
+                        <div class="col-sm-1">
+                            <h3><a href="">{{prt.event.event_title}}</a></h3>
+                        </div>
+                        <div class="col-sm-2">
+                            <h3><a href="">{{prt.product.product_name}}</a></h3>
+                        </div>
 
 
-                    <div class="col-sm-2">
-                        <div class="checkout-quantity">
-                            <div class="input-group  ">
-                                <input class="form-control"
-                                id="id-quantity_{{prt.product.id}}" name="id-quantity" type="number" min="1" step="1" value="{{prt.quantity}}">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default update_product" type="button" data-loading-text="Updating..." data-value="{{prt.product.id}}" >Update</button>
-                            </span>
+                        <div class="col-sm-2">
+                            <div class="checkout-quantity">
+                                <div class="input-group  ">
+                                    <input class="form-control"
+                                    id="id-quantity_{{prt.product.id}}" name="id-quantity" type="number" min="1" step="1" value="{{prt.quantity}}">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default update_product" type="button" data-loading-text="Updating..." data-value="{{prt.product.id}}" >Update</button>
+                                </span>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display:none">
+                                    <input id="id_form-0-save_for_later" name="form-0-save_for_later" type="checkbox">
+                                    <input id="id_form-0-DELETE" name="form-0-DELETE" type="checkbox">
+                                </div>
                             </div>
                         </div>
-                        <div>
-                            <div style="display:none">
-                                <input id="id_form-0-save_for_later" name="form-0-save_for_later" type="checkbox">
-                                <input id="id_form-0-DELETE" name="form-0-DELETE" type="checkbox">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-1">
-                    <p class="price_color align-right product_price" value="{{product.product_price}}">{{prt.price}}
-                    </p>
-                    </div>
-                    <div class="col-sm-1">
-                        {% quantity_price_total  prt as to_pr %}
-                        <p class="price_color align-right product_total">{{to_pr}}
+                        <div class="col-sm-1">
+                        <p class="price_color align-right product_price" value="{{product.product_price}}">{{prt.price}}
                         </p>
+                        </div>
+                        <div class="col-sm-1">
+                            {% quantity_price_total  prt as to_pr %}
+                            <p class="price_color align-right product_total">{{to_pr}}
+                            </p>
+                        </div>
+                        <div class="col-sm-2">
+                        <a href="#" data-id="0" data-behaviours="remove" class="glyphicon glyphicon-remove inline remove_from_cart" data-value="{{prt.product.id}}"><input type="hidden" id="cart_id" value="{{prt.id}}"></a>
+                        </div>
                     </div>
-                    <div class="col-sm-2">
-                    <a href="#" data-id="0" data-behaviours="remove" class="glyphicon glyphicon-remove inline remove_from_cart" data-value="{{prt.product.id}}"><input type="hidden" id="cart_id" value="{{prt.id}}"></a>
+                </div>
+                {% endfor %}
+
+
+
+
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div id="voucher_form_container" style="display:none">
+                    <form id="voucher_form" action="" method="post">
+
+                    <div class="form-group">
+                        <label for="id_code" class=" control-label required">
+                            Code
+                        </label>
+                        <div class="">
+                            <input class="form-control" id="id_code" maxlength="128" name="code" type="text">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-info" data-loading-text="Adding...">Add voucher</button>
+                    or <a href="#" id="voucher_form_cancel">cancel</a>
+                    </form>
                     </div>
                 </div>
             </div>
-            {% endfor %}
-
-
-
-
-
-<div class="row">
-    <div class="col-sm-6">
-        <div id="voucher_form_container" style="display:none">
-        <form id="voucher_form" action="" method="post">
-
-        <div class="form-group">
-            <label for="id_code" class=" control-label required">
-                Code
-            </label>
-            <div class="">
-                <input class="form-control" id="id_code" maxlength="128" name="code" type="text">
+            <div id="basket_totals">
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <th class="total">Basket total</th>
+                            {% basket_total  products as total %}
+                            <th class="total align-right basket_total">{{total}}</th>
+                            </tr>
+                    </tbody>
+                </table>
             </div>
-        </div>
-        <button type="submit" class="btn btn-info" data-loading-text="Adding...">Add voucher</button>
-        or <a href="#" id="voucher_form_cancel">cancel</a>
-        </form>
-        </div>
-    </div>
-</div>
-<div id="basket_totals">
-    <table class="table table-condensed">
-        <tbody>
-            <tr>
-                <th class="total">Basket total</th>
-                {% basket_total  products as total %}
-                <th class="total align-right basket_total">{{total}}</th>
-                </tr>
-        </tbody>
-    </table>
-</div>
-</div>
+            </div>
 
-</div>
+            </div>
 
-{% if not status  %}
-<div class="form-group clearfix">
-    <div class="row">
-        <div class="col-sm-4 col-sm-offset-8">
-        <button type="button" class="btn btn-info btn-lg processd_to_checkout" data-toggle="modal">Proceed to checkout</button>
+            {% if not status  %}
+            <div class="form-group clearfix">
+                <div class="row">
+                    <div class="col-sm-4 col-sm-offset-8">
+                    <button type="button" class="btn btn-info btn-lg processd_to_checkout" data-toggle="modal">Proceed to checkout</button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            </form>
+
+        {% else %}
+
+            <div>Empty Basket!!!</div>
+
+        {% endif %}
         </div>
     </div>
-</div>
-{% endif %}
-</form>
-</div>
-</div>
-
-{% else %}
-
-<div>Empty Basket!!!</div>
-
-{% endif %}
 </div>
 {% endblock content %}
 

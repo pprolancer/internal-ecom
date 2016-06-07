@@ -1,95 +1,75 @@
-{% load staticfiles %}
-{% load thumbnail %}
 {% load basket_total %}
-<!DOCTYPE html>
-<html lang="en">
+{% load util_tags %}
 
-<head>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="header-img">
+        <img id="logo-main" src="{{ STATIC_URL }}img/logo.gif" width="305" alt="Logo Thing main logo">
+    </div>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
 
-    <title>{% block title %} Ecommerce site {% endblock %}</title>
-    {% block mainstyles %}
-    <!-- Bootstrap Core CSS -->
-    <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
+            <a class="navbar-brand" href="{% if user.is_authenticated %}{% url 'home' %}{% else%}{% url 'user-login' %}{% endif %}">Cinnamon Hills Student Gift Store</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        {% if user.is_authenticated %}
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
-    <!-- Custom CSS -->
-    <link href="{{ STATIC_URL }}css/shop-item.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet">
-    {% block css %}
-    {% endblock %}
-    {% endblock %}
+            <ul class="nav navbar-nav">
+                <li class="{% active_if 'about' %}">
+                    <a href="{% url 'about' %}">About</a>
+                </li>
+                <li class="{% active_if 'event' %}">
+                    <a href="{% url 'event' %}">Event</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)">Contact</a>
+                </li>
+                <li class="{% active_if 'add_to_basket' %}">
+                    <a href = "{% url 'add_to_basket' %}" ><b>Cart</b>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="{% url 'logout' %}">Logout</a>
+                </li>
+                {% parent_student_name  request.user as child_names %}
+                {% if child_names %}
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Welcome,{{request.user}}<span class="caret"></span></a>
+                  <ul class="dropdown-menu ">
+                  <li>You are Purchasing gift-</li>
+                <li ><a href="{% url 'welcome' %}"> Goto Welcome Page</a></li>
+                {% for child_name in child_names %}
+                    <li ><a href="#">{{child_name.to_person.user.username}}</a></li>
+                {% endfor %}
+                  </ul>
 
-</head>
-
-<body>
-    
-    <!-- Navigation -->
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            {% if user.is_authenticated %}
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="{% url 'logout' %}">Logout</a>
-                    </li>
-                    <li><a href="#" >Welcome,{{request.user}}-{{request.user.profile.user_role}}</a>
-                    </li>
-                </ul>
-            </div>
-            {% else %}
+                </li>
+                {% else %}
+                <li><a href="{% url 'welcome' %}">Please select user</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        {% else %}
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
                 <ul class="nav navbar-nav">
-                    <li>
+                    <li class="{% active_if 'user-login' %}">
                         <a href="{% url 'user-login' %}">Login</a>
                     </li>
                 </ul>
         </div>
-            {%endif%}
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container -->
-    </nav>
-
-    <!-- Page Content -->
-    <div class="container">
-
-        {% block breadcrumb %}
-
-        {% endblock %}
-
-        {% block content %}
-
-        {% endblock%}
-        
+        {%endif%}
+        <!-- /.navbar-collapse -->
     </div>
     <!-- /.container -->
-
-    <!-- jQuery -->
-    <script src="{{ STATIC_URL }}js/jquery.js" ></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="{{ STATIC_URL }}js/bootstrap.min.js" ></script>
-    
-    {% block javascript %}
-
-    {% endblock %}
-</body>
-
-</html>
+</nav>

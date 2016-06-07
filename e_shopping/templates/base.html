@@ -27,79 +27,22 @@
 </head>
 
 <body>
-        <!-- Navigation -->
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-
-                {% if user.is_authenticated %}
-                <a class="navbar-brand" href="{% url 'home' %}">Cinnamon Hills Student Gift Store
-</a>
-                {% else %}
-                <a class="navbar-brand" href="#">Cinnamon Hills Student Gift Store
-</a>
-                {% endif %}
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            {% if user.is_authenticated %}
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="{% url 'about' %}">About</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'event' %}">Event</a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)">Contact</a>
-                    </li>
-                    <li>
-                        <a href = "{% url 'add_to_basket' %}" ><b>Cart</b>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'logout' %}">Logout</a>
-                    </li>
-                    {% parent_student_name  request.user as child_names %}
-                    {% if child_names %}
-                    <li class="dropdown">
-                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Welcome,{{request.user}}<span class="caret"></span></a>
-                      <ul class="dropdown-menu ">
-                      <li>You are Purchasing gift-</li>
-                    <li ><a href="{% url 'welcome' %}"> Goto Welcome Page</a></li>
-                    {% for child_name in child_names %}
-                        <li ><a href="#">{{child_name.to_person.user.username}}</a></li>
-                    {% endfor %}
-                      </ul>
-
-                    </li>
-                    {% else %}
-                    <li><a href="{% url 'welcome' %}">Please select user</a></li>
-                    {% endif %}
-                    </ul>
-            </div>
-            {% else %}
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="{% url 'user-login' %}">Login</a>
-                    </li>
-                </ul>
+    <!-- Navigation -->
+    {% block header %}
+    {% include "header.html" %}
+     <div class="messages">
+    {% if messages %}
+        {% for message in messages %}
+        <div class='alert alert-{% if message.tags %}{{ message.tags }}{% endif %} alert-dismissible'>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          {{ message }}
         </div>
-            {%endif%}
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container -->
-    </nav>
+
+        {% endfor %}
+    {% endif %}
+    </div>
+    {% endblock%}
+
 
     <!-- Page Content -->
     <div class="container">
@@ -114,18 +57,29 @@
 
     </div>
     <!-- /.container -->
-    {% include "footer.html" %}
+    {% block footer %}
+        {% include "footer.html" %}
+    {% endblock%}
+
     <!-- /.container -->
 
-    <!-- jQuery -->
+    {% block main_javascript %}
     <script src="{{ STATIC_URL }}js/jquery.js" ></script>
-
-    <!-- Bootstrap Core JavaScript -->
     <script src="{{ STATIC_URL }}js/bootstrap.min.js" ></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+      setTimeout(function() {
+        $(".messages .alert-success").fadeTo(2000, 500).slideUp(500, function(){
+          $(".messages .alert-success").alert('close');
+        });
+      }, 2000);
+    });
+    </script>
+    {% endblock %}
 
-{% block javascript %}
+    {% block javascript %}
 
-{% endblock %}
+    {% endblock %}
 
 </body>
 
