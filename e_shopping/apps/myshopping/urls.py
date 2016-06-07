@@ -1,8 +1,7 @@
-from django.conf.urls import  url
-from django.views.generic import TemplateView
-from myshopping.views import (IndexView,HomeView, ProductDetailView, RemoveFromCartView,
-	UpdateCartView, ProcessdCheckout, CheckoutList, AddToCartView,
-	SendMailToAdmin, about_view)
+from django.conf.urls import url
+from myshopping.views import IndexView, HomeView, ProductDetailView, \
+    RemoveFromCartView, UpdateCartView, ProcessdCheckout, CheckoutList, \
+    AddToCartView, SendMailToAdmin, about_view, contact_view
 
 urlpatterns = [
 
@@ -16,4 +15,5 @@ urlpatterns = [
     url(r'^addtobasket/$', AddToCartView.as_view(), name="add_to_basket"),
     url(r'^sendemail/$', SendMailToAdmin.as_view(), name="sendmail_to_admin"),
     url(r'^about/$', about_view, name="about"),
+    url(r'^contact/$', contact_view, name="contact"),
 ]

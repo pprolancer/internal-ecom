@@ -1,10 +1,23 @@
 {% extends "base.html" %}
-{% block content %}
 {% load thumbnail %}
 {% load basket_total %}
 
+{% block breadcrumb %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="active">Basket</li>
+    </ul>
+{% endblock %}
 
-<div class="messages" >
+{% block content %}
+
+<div class="page-header action">
+    <h1>Basket</h1>
+</div>
+
+<div class="basket-messages" >
     {% if messages %}
     {% for message in messages %}
     <div class='alert alert-{% if message.tags %}{{ message.tags }}{% endif %}'>
@@ -17,15 +30,6 @@
 
 <div class="page_inner">
 
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url 'home' %}">Home</a>
-        </li>
-        <li class="active">Basket</li>
-    </ul>
-    <div class="page-header action">
-        <h1>Basket</h1>
-    </div>
 
     <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog">

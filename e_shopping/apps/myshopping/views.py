@@ -287,7 +287,15 @@ class SendMailToAdmin(View):
             content_type="application/json")
 
 
+@login_required
 def about_view(request):
     ''' about view '''
 
     return render(request, "myshopping/about.html", {})
+
+
+@login_required
+def contact_view(request):
+    ''' contact view '''
+
+    return render(request, "myshopping/contact.html", {})

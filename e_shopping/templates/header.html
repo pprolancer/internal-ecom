@@ -23,18 +23,18 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
             <ul class="nav navbar-nav">
-                <li class="{% active_if 'about' %}">
-                    <a href="{% url 'about' %}">About</a>
+                <li class="{% active_if 'add_to_basket' %}">
+                    <a href="{% url 'add_to_basket' %}" ><b>Cart</b>
+                    </a>
                 </li>
                 <li class="{% active_if 'event' %}">
                     <a href="{% url 'event' %}">Event</a>
                 </li>
-                <li>
-                    <a href="javascript:void(0)">Contact</a>
+                <li class="{% active_if 'about' %}">
+                    <a href="{% url 'about' %}">About</a>
                 </li>
-                <li class="{% active_if 'add_to_basket' %}">
-                    <a href = "{% url 'add_to_basket' %}" ><b>Cart</b>
-                    </a>
+                <li class="{% active_if 'contact' %}">
+                    <a href="{% url 'contact' %}">Contact</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -44,7 +44,7 @@
                 {% parent_student_name  request.user as child_names %}
                 {% if child_names %}
                 <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Welcome,{{request.user}}<span class="caret"></span></a>
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Welcome, {{request.user}}<span class="caret"></span></a>
                   <ul class="dropdown-menu ">
                   <li>You are Purchasing gift-</li>
                 <li ><a href="{% url 'welcome' %}"> Goto Welcome Page</a></li>
