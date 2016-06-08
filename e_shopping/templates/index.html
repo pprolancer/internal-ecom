@@ -3,82 +3,29 @@
 {% load basket_total %}
 
 <form class = "form-horizontal" action="." method="post">
-{% csrf_token %}
-   <div class = "form-group">
-      <div class = "col-sm-offset-2 col-sm-10">
+  {% csrf_token %}
+  <div class = "form-group">
+    <div class = "col-sm-offset-2 col-sm-8">
     {% if user.is_authenticated %}
-
-
-    {% current_user_count request.user.id  as current_user_count  %}
-    <strong>Welcome, </strong>{{request.user.username}},To the Cinnamonhills Gift store
-    <div>Your item Count is-{{current_user_count.product_count}} and price limit -{{current_user_count.product_price_limit}}$</div>
-    {% parent_student_name  request.user as child_names %}
-      {% for child_name in child_names %}
-
-         <div>
-            <h3>
-            <strong>{{child_name.to_person.user.username|title}}:</strong>
-            </h3>
-            {% student_event child_name.to_person_id as events %}
-            {% if events %}
-            <ul>
-            {% for event in events %}
-            {% if event.is_past_due %}
-            <div class="bg-danger">
-                {% if event.event_type == 'PersonalEvent' %}
-                      <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d "}}</li>
-                    {% else %}
-                      <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d, Y"}}</li>
-                {% endif %}
-
-                {% current_user_event_count request.user.id child_name.to_person_id event.id as count  %}
-
-                Itemcount-({{count}}),
-
-                {% current_user_event_pricelimit request.user.id child_name.to_person_id event.id as pricelimit  %}
-
-                PriceLimit-({{pricelimit}}$)
-            </div>
-            {% else %}
-              <div class="bg-success">
-                {% if event.event_type == 'PersonalEvent' %}
-                      <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d "}}</li>
-                    {% else %}
-                      <li>{{event.event_title|title}}-{{event.event_start_datetime | date:"M d, Y"}}</li>
-                {% endif %}
-
-                {% current_user_event_count request.user.id child_name.to_person_id event.id as count  %}
-
-                Itemcount-({{count}}),
-
-                {% current_user_event_pricelimit request.user.id child_name.to_person_id event.id as pricelimit  %}
-
-                PriceLimit-({{pricelimit}}$)
-            </div>
-            {% endif %}
-
-
-
-          {% endfor %}
-            </ul>
-            {% else %}
-            <div>For creating Event...Contact To Admin !!!</div>
-            {% endif %}
-         </div>
-
-
-       {% endfor %}
-
+      {% current_user_count request.user.id  as current_user_count  %}
+      <p><strong>Welcome, </strong>{{request.user.username|capfirst}},To the Cinnamonhills Gift Store. This store was set up to help you more conveniently purchase birthday and holiday gifts for your student. We hope you are able to find a gift that will enhance your student’s treatment experience.</p>
+      <p>During your student’s stay at Cinnamon Hills, they are allowed to receive a limited number of gifts for birthday and holiday. A student will only be able to receive three items per event regardless of how many individuals are attempting to purchase gifts for that student. Please coordinate with anyone else involved in your student’s treatment because they may be attempting to purchase gifts for your student as well.</p>
+      <p>Student gifts are organized into three categories: Activities, Books, and Snacks. You are allowed to purchase one gift from each category; however, you are not required to purchase three gifts. Three gifts is simply the limit for each student for every event. If you have any questions about our gift structure, please call 435-674-0984 and ask for Information Management.</p>
+      <p>
+      <strong>Current Shopping limits:</strong><br>
+      Item limit: {{current_user_count.product_count}}<br>
+      Spending limit: ${{current_user_count.product_price_limit}}<br>
+      </p>
 
     {% endif %}
-      </div>
-   </div>
+    </div>
+  </div>
 
-   <div class = "form-group">
-      <div class = "col-sm-offset-2 col-sm-10">
-         <button type="submit" class = "btn btn-primary">Next</button>
-      </div>
-   </div>
+  <div class = "form-group">
+    <div class = "col-sm-offset-2 col-sm-10">
+      <button type="submit" class = "btn btn-primary">Next</button>
+    </div>
+  </div>
 
 </form>
 
